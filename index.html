@@ -12,7 +12,6 @@
     <link rel="canonical" href="https://ocr-tool.freedomclaw.com/">
     
     <style>
-        /* Tesseract.js will be loaded dynamically via script injection */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
@@ -232,13 +231,13 @@
             <span class="feature-badge">💻 Works Offline</span>
         </div>
         
-        <div class="upload-area" id="dropZone" style="cursor: pointer;" onclick="triggerFilePicker()">
+        <div class="upload-area" id="dropZone">
             <div class="upload-icon">📁</div>
             <p class="upload-text">Drag & drop image or PDF here</p>
             <p class="upload-hint">or click to browse files (JPG, PNG, GIF, BMP, WEBP, PDF)</p>
         </div>
         
-        <input type="file" id="fileInput" accept="image/*,.pdf" style="display: none;">
+        <input type="file" id="fileInput" accept="image/*,.pdf">
         
         <div class="controls">
             <select id="languageSelect">
@@ -282,97 +281,97 @@
         
         <div class="error-message" id="errorMessage"></div>
     </div>
-
+    
     <!-- Tesseract.js loaded from CDN - uses correct global namespace -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js"></script>
-
+    
     <script>
-         let currentFile = null;
-         let extractedText = '';
+        let currentFile = null;
+        let extractedText = '';
         
-         // Function to trigger file picker when drop zone is clicked
-         function triggerFilePicker() {
-             const fileInput = document.getElementById('fileInput');
-             if (fileInput) {
-                 fileInput.click();
-             }
-         }
-
-         // Properly wait for Tesseract.js to load (uses Tesseract.Tesseract namespace)
-         const waitForTesseract = new Promise((resolve, reject) => {
-             if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
-                 console.log('✓ Tesseract.js library loaded from CDN');
-                 resolve(Tesseract);
-                 return;
-             }
-
-             let attempts = 0;
-             const maxAttempts = 30; // Poll every ~1.2 seconds for ~36s total (reasonable timeout)
-            
-             const poll = () => {
-                 attempts++;
-                 if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
-                     console.log('✓ Tesseract.js fully loaded after', attempts, 'polling attempts');
-                     resolve(Tesseract);
-                 } else if (attempts >= maxAttempts) {
-                     reject(new Error('Failed to load Tesseract.js - timeout exceeded. Please try refreshing the page.'));
-                 } else {
-                     setTimeout(poll, 1200); // Poll every ~1.2s
-                 }
-             };
-            
-             poll(); // Start polling immediately
-         });
-
-         // Drag & drop functionality
-         const dropZone = document.getElementById('dropZone');
-         const fileInput = document.getElementById('fileInput');
+        // Function to trigger file picker when drop zone is clicked
+        function triggerFilePicker() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput) {
+                fileInput.click();
+            }
+        }
         
-         dropZone.addEventListener('dragover', (e) => {
-             e.preventDefault();
-             dropZone.classList.add('dragover');
-         });
-        
-         dropZone.addEventListener('dragleave', () => {
-             dropZone.classList.remove('dragover');
-         });
-        
-         dropZone.addEventListener('drop', (e) => {
-             e.preventDefault();
-             dropZone.classList.remove('dragover');
+        // Properly wait for Tesseract.js to load (uses Tesseract.Tesseract namespace)
+        const waitForTesseract = new Promise((resolve, reject) => {
+            if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+                console.log('✓ Tesseract.js library loaded from CDN');
+                resolve(Tesseract);
+                return;
+            }
             
-             if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                 handleFileSelect(e.dataTransfer.files[0]);
-             }
-         });
+            let attempts = 0;
+            const maxAttempts = 30; // Poll every ~1.2 seconds for ~36s total (reasonable timeout)
+            
+            const poll = () => {
+                attempts++;
+                if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+                    console.log('✓ Tesseract.js fully loaded after', attempts, 'polling attempts');
+                    resolve(Tesseract);
+                } else if (attempts >= maxAttempts) {
+                    reject(new Error('Failed to load Tesseract.js - timeout exceeded. Please try refreshing the page.'));
+                } else {
+                    setTimeout(poll, 1200); // Poll every ~1.2s
+                }
+            };
+            
+            poll(); // Start polling immediately
+        });
         
-         fileInput.addEventListener('change', (e) => {
-             if (e.target.files && e.target.files[0]) {
-                 handleFileSelect(e.target.files[0]);
-             }
-         });
+        // Drag & drop functionality
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
         
-         function handleFileSelect(file) {
-             currentFile = file;
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
             
-             // Update UI based on file type
-             const icon = document.querySelector('.upload-icon');
-             const text = document.querySelector('.upload-text');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleFileSelect(e.dataTransfer.files[0]);
+            }
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+        
+        function handleFileSelect(file) {
+            currentFile = file;
             
-             if (file.type === 'application/pdf') {
-                 icon.textContent = '📄';
-                 text.textContent = `PDF selected: ${file.name}`;
-             } else {
-                 icon.textContent = '🖼️';
-                 text.textContent = `${file.type.split('/')[1].toUpperCase()} image: ${file.name}`;
-             }
+            // Update UI based on file type
+            const icon = document.querySelector('.upload-icon');
+            const text = document.querySelector('.upload-text');
             
-             // Reset results area
-             document.getElementById('resultsArea').style.display = 'none';
-             document.getElementById('errorMessage').style.display = 'none';
-         }
-
-         async function extractText() {
+            if (file.type === 'application/pdf') {
+                icon.textContent = '📄';
+                text.textContent = `PDF selected: ${file.name}`;
+            } else {
+                icon.textContent = '🖼️';
+                text.textContent = `${file.type.split('/')[1].toUpperCase()} image: ${file.name}`;
+            }
+            
+            // Reset results area
+            document.getElementById('resultsArea').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        async function extractText() {
             if (!currentFile) {
                 showError('Please select an image or PDF file first.');
                 return;
@@ -479,6 +478,7 @@
                 console.error('OCR Error:', error);
                 showError(error.message || 'Failed to extract text from image. Please try again.');
             } finally {
+                // Always re-enable button regardless of success or failure
                 extractBtn.disabled = false;
             }
         }
@@ -500,25 +500,23 @@
             document.getElementById('lineCount').textContent = lineCount.toLocaleString();
         }
         
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Clear loading indicator
+            const loading = document.getElementById('loadingIndicator');
+            loading.style.display = 'none';
+        }
+        
         function copyToClipboard() {
             const textArea = document.getElementById('textOutput');
             textArea.select();
             document.execCommand('copy');
             
             // Show feedback
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Copied!';
-            setTimeout(() => { btn.textContent = originalText; }, 1500);
-        }
-        
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            
-            // Hide results area on error
-            document.getElementById('resultsArea').style.display = 'none';
+            alert('Text copied to clipboard!');
         }
     </script>
 </body>
