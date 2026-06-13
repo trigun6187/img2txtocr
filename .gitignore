@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*sln
+*sfc
+*sc.user
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Build outputs
+dist/
+build/
+out/
