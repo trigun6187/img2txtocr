@@ -285,8 +285,7 @@
     </div>
 
     <!-- Tesseract.js loaded from CDN - uses correct global namespace -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js">
     <script>
         let currentFile = null;
         let extractedText = '';
@@ -326,34 +325,25 @@
         });
 
         // ============================================
+        // ============================================
         // PROPER HTML5 Drag & Drop + Click Implementation
         // Based on MDN best practices: separate event handlers completely
-        // Key insight: file input inside container triggers naturally on click
+        // MOBILE-FIRST APPROACH: Hidden file input triggered by any click in drop zone
+        // Drag/drop events kept for desktop visual feedback only (won't work on iOS/Android)
         // ============================================
-
         const dropZone = document.getElementById('dropZone');
         
-        // CLICK HANDLER - Trigger hidden file input when clicking the drop zone
-        // This uses stopPropagation to prevent drag events from interfering
+        // CLICK HANDLER - ANY click within drop zone triggers file picker
+        // This is the MOBILE-FIRST approach: don't restrict which elements can trigger it
         dropZone.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent bubbling that might interfere with other handlers
+            e.stopPropagation(); // Prevent bubbling that might interfere with drag events
             
-            // Only trigger if click is on the container itself, not on child elements
-            const target = e.target;
-            const isClickOnContainer = target === dropZone || 
-                !target.closest('.upload-icon') && 
-                !target.classList.contains('upload-text') && 
-                !target.classList.contains('upload-hint');
-            
-            if (isClickOnContainer) {
-                // Trigger the hidden file input - this opens the native picker
-                const fileInput = document.getElementById('fileInput');
-                if (fileInput) {
-                    fileInput.click();
-                }
+            // Trigger the hidden file input - this opens the native picker on ALL devices
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput) {
+                fileInput.click();
             }
         });
-
         // DRAG EVENTS - These should NOT stop propagation to allow natural bubbling
         dropZone.addEventListener('dragenter', function(e) {
             e.preventDefault(); // Prevent default drag behavior
@@ -369,6 +359,8 @@
             dropZone.classList.remove('dragover');
         });
 
+        // DROP HANDLER - Only works on desktop (iOS Safari and most Android Chrome don't support drag-drop)
+        // Keep this for desktop users who drag files here
         dropZone.addEventListener('drop', function(e) {
             e.preventDefault(); // Prevent default browser behavior
             
