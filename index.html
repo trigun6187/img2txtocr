@@ -231,7 +231,7 @@
             <span class="feature-badge">💻 Works Offline</span>
         </div>
         
-        <div class="upload-area" id="dropZone" onclick="triggerFilePicker()">
+        <div class="upload-area" id="dropZone">
             <div class="upload-icon">📁</div>
             <p class="upload-text">Drag & drop image or PDF here</p>
             <p class="upload-hint">or click to browse files (JPG, PNG, GIF, BMP, WEBP, PDF)</p>
@@ -327,6 +327,12 @@
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
         
+        // Add click listener for the drop zone to trigger file picker
+        dropZone.addEventListener('click', (e) => {
+            e.stopPropagation();
+            triggerFilePicker();
+        });
+
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.classList.add('dragover');
