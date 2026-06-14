@@ -231,15 +231,15 @@
             <span class="feature-badge">💻 Works Offline</span>
         </div>
 
-        <!-- FIXED: Proper drag-and-drop + click implementation -->
+        <!-- Proper drag-and-drop + click implementation using wrapper pattern -->
         <div class="upload-area" id="dropZone">
             <div class="upload-icon">📁</div>
             <p class="upload-text">Drag & drop image or PDF here</p>
             <p class="upload-hint">or click to browse files (JPG, PNG, GIF, BMP, WEBP, PDF)</p>
+            
+            <!-- Hidden file input inside the container - this is the key to making both work -->
+            <input type="file" id="fileInput" accept="image/*,.pdf" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0;">
         </div>
-
-        <!-- Hidden file input - triggered by both drag-drop and click -->
-        <input type="file" id="fileInput" accept="image/*,.pdf">
 
         <div class="controls">
             <select id="languageSelect">
@@ -326,40 +326,43 @@
         });
 
         // ============================================
-        // FIXED: Proper HTML5 Drag & Drop + Click Implementation
-        // Based on MDN best practices for event handling separation
+        // PROPER HTML5 Drag & Drop + Click Implementation
+        // Based on MDN best practices: separate event handlers completely
+        // Key insight: file input inside container triggers naturally on click
         // ============================================
 
         const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-
-        // FIX 1: Separate click and drag/drop event handlers completely
-        // Click handler - NO stopPropagation (allows natural bubbling)
+        
+        // CLICK HANDLER - Trigger hidden file input when clicking the drop zone
+        // This uses stopPropagation to prevent drag events from interfering
         dropZone.addEventListener('click', function(e) {
-            // Only trigger if click is directly on the drop zone container
-            // Not on child elements like buttons or links
+            e.stopPropagation(); // Prevent bubbling that might interfere with other handlers
+            
+            // Only trigger if click is on the container itself, not on child elements
             const target = e.target;
             const isClickOnContainer = target === dropZone || 
                 !target.closest('.upload-icon') && 
                 !target.classList.contains('upload-text') && 
                 !target.classList.contains('upload-hint');
-
+            
             if (isClickOnContainer) {
-                // Trigger file picker - this will bubble naturally
-                triggerFilePicker();
+                // Trigger the hidden file input - this opens the native picker
+                const fileInput = document.getElementById('fileInput');
+                if (fileInput) {
+                    fileInput.click();
+                }
             }
         });
 
-        // FIX 2: Drag events use stopPropagation to prevent click interference
+        // DRAG EVENTS - These should NOT stop propagation to allow natural bubbling
         dropZone.addEventListener('dragenter', function(e) {
-            e.preventDefault();
-            e.stopPropagation(); // Stop propagation to prevent click handler from interfering
+            e.preventDefault(); // Prevent default drag behavior
             dropZone.classList.add('dragover');
         });
 
         dropZone.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            e.stopPropagation(); // Keep dragover class visible while dragging
+            e.preventDefault(); // Keep file dropped here
+            dropZone.classList.add('dragover');
         });
 
         dropZone.addEventListener('dragleave', function() {
@@ -367,20 +370,24 @@
         });
 
         dropZone.addEventListener('drop', function(e) {
-            e.preventDefault();
-            e.stopPropagation(); // Prevent click from triggering after drop
-
+            e.preventDefault(); // Prevent default browser behavior
+            
             if (e.dataTransfer.files && e.dataTransfer.files[0]) {
                 handleFileSelect(e.dataTransfer.files[0]);
             }
+            
+            dropZone.classList.remove('dragover');
         });
 
-        // FIX 3: File input change handler - uses capture phase to ensure proper execution order
-        fileInput.addEventListener('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                handleFileSelect(e.target.files[0]);
-            }
-        }, { capture: true }); // Use capture to ensure it runs before other handlers
+        // FILE INPUT CHANGE HANDLER - Standard event listener
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+        }
 
         function handleFileSelect(file) {
             currentFile = file;
