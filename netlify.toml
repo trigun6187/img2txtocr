@@ -8,3 +8,7 @@
 [build]
   command = ""
   publish = "."
+
+# Netlify deployment configuration for static HTML site
+# To deploy: netlify deploy --prod or netlify deploy --site=<site-name>
+# Requires authentication via NETLIFY_AUTH_TOKEN environment variable or login first
