@@ -323,28 +323,40 @@
             poll(); // Start polling immediately
         });
         
-        // Drag & drop functionality
+        // Drag & drop functionality - using proper event delegation pattern
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
-        
-        // Add click listener for the drop zone to trigger file picker
+
+        // Use event delegation on the parent container for cleaner handling
         dropZone.addEventListener('click', (e) => {
+            // Only trigger if click is directly on the drop zone, not on child elements
+            if (e.target === dropZone || e.target.closest('.upload-icon') === null && 
+                e.target.classList.contains('upload-text') === false && 
+                e.target.classList.contains('upload-hint') === false) {
+                e.stopPropagation(); // Prevent drag/drop events from bubbling
+                triggerFilePicker();
+            }
+        });
+
+        // Proper event order: dragenter first, then dragover/dragleave/drop
+        dropZone.addEventListener('dragenter', (e) => {
+            e.preventDefault();
             e.stopPropagation();
-            triggerFilePicker();
+            dropZone.classList.add('dragover');
         });
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.classList.add('dragover');
+            // Keep dragover class visible while dragging
         });
-        
+
         dropZone.addEventListener('dragleave', () => {
             dropZone.classList.remove('dragover');
         });
-        
+
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.classList.remove('dragover');
+            e.stopPropagation(); // Prevent click from triggering after drop
             
             if (e.dataTransfer.files && e.dataTransfer.files[0]) {
                 handleFileSelect(e.dataTransfer.files[0]);
