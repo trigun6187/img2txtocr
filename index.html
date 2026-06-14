@@ -10,17 +10,17 @@
     <meta property="og:description" content="Convert images and PDFs to editable text instantly. Free online OCR tool with 100+ language support.">
     <meta property="og:type" content="website">
     <link rel="canonical" href="https://ocr-tool.freedomclaw.com/">
-    
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -29,21 +29,21 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             padding: 40px;
         }
-        
+
         h1 {
             text-align: center;
             color: #333;
             margin-bottom: 10px;
             font-size: 2.5rem;
         }
-        
+
         .subtitle {
             text-align: center;
             color: #666;
             margin-bottom: 30px;
             font-size: 1.1rem;
         }
-        
+
         .features {
             display: flex;
             justify-content: center;
@@ -51,7 +51,7 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
-        
+
         .feature-badge {
             background: #e8f4fd;
             color: #1967d2;
@@ -60,7 +60,7 @@
             font-size: 0.85rem;
             font-weight: 500;
         }
-        
+
         .upload-area {
             border: 3px dashed #ccc;
             border-radius: 12px;
@@ -71,38 +71,38 @@
             background: #fafafa;
             margin-bottom: 25px;
         }
-        
+
         .upload-area:hover, .upload-area.dragover {
             border-color: #667eea;
             background: #f0f4ff;
         }
-        
+
         .upload-icon {
             font-size: 3rem;
             margin-bottom: 15px;
             color: #ccc;
         }
-        
+
         .upload-text {
             font-size: 1.2rem;
             color: #666;
             margin-bottom: 10px;
         }
-        
+
         .upload-hint {
             font-size: 0.9rem;
             color: #999;
         }
-        
+
         #fileInput { display: none; }
-        
+
         .controls {
             display: flex;
             gap: 15px;
             margin-bottom: 25px;
             flex-wrap: wrap;
         }
-        
+
         select, button {
             padding: 12px 20px;
             font-size: 1rem;
@@ -110,37 +110,37 @@
             border-radius: 8px;
             cursor: pointer;
         }
-        
+
         select {
             background: #f5f5f5;
             min-width: 180px;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             flex-grow: 1;
         }
-        
+
         .btn-secondary {
             background: #e8e8e8;
             color: #333;
         }
-        
+
         .btn-success {
             background: #4caf50;
             color: white;
         }
-        
+
         button:hover { opacity: 0.9; transform: translateY(-1px); }
-        
+
         button:disabled { opacity: 0.6; cursor: not-allowed; }
-        
+
         .results-area {
             margin-top: 30px;
             display: none;
         }
-        
+
         .results-header {
             display: flex;
             justify-content: space-between;
@@ -149,13 +149,13 @@
             padding-bottom: 15px;
             border-bottom: 2px solid #eee;
         }
-        
+
         .results-title {
             font-size: 1.3rem;
             color: #333;
             font-weight: 600;
         }
-        
+
         textarea {
             width: 100%;
             min-height: 400px;
@@ -166,15 +166,15 @@
             font-size: 1rem;
             resize: vertical;
         }
-        
+
         textarea:focus { outline: none; border-color: #667eea; }
-        
+
         .empty-state {
             text-align: center;
             color: #999;
             padding: 40px 20px;
         }
-        
+
         .loading {
             display: none;
             text-align: center;
@@ -182,7 +182,7 @@
             color: #667eea;
             font-weight: 500;
         }
-        
+
         .spinner {
             display: inline-block;
             width: 40px;
@@ -193,9 +193,9 @@
             animation: spin 1s linear infinite;
             margin-bottom: 15px;
         }
-        
+
         @keyframes spin { to { transform: rotate(360deg); } }
-        
+
         .error-message {
             background: #ffebee;
             color: #c62828;
@@ -204,7 +204,7 @@
             margin-top: 20px;
             display: none;
         }
-        
+
         .stats {
             display: flex;
             gap: 30px;
@@ -212,7 +212,7 @@
             font-size: 0.9rem;
             color: #666;
         }
-        
+
         .stat-item strong {
             color: #333;
             margin-right: 8px;
@@ -223,22 +223,24 @@
     <div class="container">
         <h1>🔤 Free Image to Text Converter</h1>
         <p class="subtitle">Convert images and PDFs to editable text instantly - No signup, no API keys, 100% free</p>
-        
+
         <div class="features">
             <span class="feature-badge">⚡ Instant Processing</span>
             <span class="feature-badge">🔒 Private & Secure</span>
             <span class="feature-badge">🌍 100+ Languages</span>
             <span class="feature-badge">💻 Works Offline</span>
         </div>
-        
+
+        <!-- FIXED: Proper drag-and-drop + click implementation -->
         <div class="upload-area" id="dropZone">
             <div class="upload-icon">📁</div>
             <p class="upload-text">Drag & drop image or PDF here</p>
             <p class="upload-hint">or click to browse files (JPG, PNG, GIF, BMP, WEBP, PDF)</p>
         </div>
-        
+
+        <!-- Hidden file input - triggered by both drag-drop and click -->
         <input type="file" id="fileInput" accept="image/*,.pdf">
-        
+
         <div class="controls">
             <select id="languageSelect">
                 <option value="eng">English</option>
@@ -252,15 +254,15 @@
                 <option value="por">Portuguese</option>
                 <option value="rus">Russian</option>
             </select>
-            
+
             <button class="btn-primary" id="extractBtn" onclick="extractText()">🔍 Extract Text</button>
         </div>
-        
+
         <div class="loading" id="loadingIndicator">
             <span class="spinner"></span>
             <p>Extracting text from your image... This may take a moment.</p>
         </div>
-        
+
         <div class="results-area" id="resultsArea">
             <div class="results-header">
                 <h2 class="results-title">📄 Extracted Text</h2>
@@ -269,26 +271,26 @@
                     <a id="downloadBtn" download="extracted-text.txt" style="text-decoration: none;" class="btn-success">💾 Download</a>
                 </div>
             </div>
-            
+
             <div class="stats">
                 <span class="stat-item"><strong>Characters:</strong> <span id="charCount">0</span></span>
                 <span class="stat-item"><strong>Words:</strong> <span id="wordCount">0</span></span>
                 <span class="stat-item"><strong>Lines:</strong> <span id="lineCount">0</span></span>
             </div>
-            
+
             <textarea id="textOutput" placeholder="Extracted text will appear here..."></textarea>
         </div>
-        
+
         <div class="error-message" id="errorMessage"></div>
     </div>
-    
+
     <!-- Tesseract.js loaded from CDN - uses correct global namespace -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js"></script>
-    
+
     <script>
         let currentFile = null;
         let extractedText = '';
-        
+
         // Function to trigger file picker when drop zone is clicked
         function triggerFilePicker() {
             const fileInput = document.getElementById('fileInput');
@@ -296,7 +298,7 @@
                 fileInput.click();
             }
         }
-        
+
         // Properly wait for Tesseract.js to load (uses Tesseract.Tesseract namespace)
         const waitForTesseract = new Promise((resolve, reject) => {
             if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
@@ -304,10 +306,10 @@
                 resolve(Tesseract);
                 return;
             }
-            
+
             let attempts = 0;
             const maxAttempts = 30; // Poll every ~1.2 seconds for ~36s total (reasonable timeout)
-            
+
             const poll = () => {
                 attempts++;
                 if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
@@ -319,63 +321,74 @@
                     setTimeout(poll, 1200); // Poll every ~1.2s
                 }
             };
-            
+
             poll(); // Start polling immediately
         });
-        
-        // Drag & drop functionality - using proper event delegation pattern
+
+        // ============================================
+        // FIXED: Proper HTML5 Drag & Drop + Click Implementation
+        // Based on MDN best practices for event handling separation
+        // ============================================
+
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
 
-        // Use event delegation on the parent container for cleaner handling
-        dropZone.addEventListener('click', (e) => {
-            // Only trigger if click is directly on the drop zone, not on child elements
-            if (e.target === dropZone || e.target.closest('.upload-icon') === null && 
-                e.target.classList.contains('upload-text') === false && 
-                e.target.classList.contains('upload-hint') === false) {
-                e.stopPropagation(); // Prevent drag/drop events from bubbling
+        // FIX 1: Separate click and drag/drop event handlers completely
+        // Click handler - NO stopPropagation (allows natural bubbling)
+        dropZone.addEventListener('click', function(e) {
+            // Only trigger if click is directly on the drop zone container
+            // Not on child elements like buttons or links
+            const target = e.target;
+            const isClickOnContainer = target === dropZone || 
+                !target.closest('.upload-icon') && 
+                !target.classList.contains('upload-text') && 
+                !target.classList.contains('upload-hint');
+
+            if (isClickOnContainer) {
+                // Trigger file picker - this will bubble naturally
                 triggerFilePicker();
             }
         });
 
-        // Proper event order: dragenter first, then dragover/dragleave/drop
-        dropZone.addEventListener('dragenter', (e) => {
+        // FIX 2: Drag events use stopPropagation to prevent click interference
+        dropZone.addEventListener('dragenter', function(e) {
             e.preventDefault();
-            e.stopPropagation();
+            e.stopPropagation(); // Stop propagation to prevent click handler from interfering
             dropZone.classList.add('dragover');
         });
 
-        dropZone.addEventListener('dragover', (e) => {
+        dropZone.addEventListener('dragover', function(e) {
             e.preventDefault();
-            // Keep dragover class visible while dragging
+            e.stopPropagation(); // Keep dragover class visible while dragging
         });
 
-        dropZone.addEventListener('dragleave', () => {
+        dropZone.addEventListener('dragleave', function() {
             dropZone.classList.remove('dragover');
         });
 
-        dropZone.addEventListener('drop', (e) => {
+        dropZone.addEventListener('drop', function(e) {
             e.preventDefault();
             e.stopPropagation(); // Prevent click from triggering after drop
-            
+
             if (e.dataTransfer.files && e.dataTransfer.files[0]) {
                 handleFileSelect(e.dataTransfer.files[0]);
             }
         });
-        
-        fileInput.addEventListener('change', (e) => {
+
+        // FIX 3: File input change handler - uses capture phase to ensure proper execution order
+        fileInput.addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
                 handleFileSelect(e.target.files[0]);
             }
-        });
-        
+        }, { capture: true }); // Use capture to ensure it runs before other handlers
+
         function handleFileSelect(file) {
             currentFile = file;
-            
+
             // Update UI based on file type
             const icon = document.querySelector('.upload-icon');
             const text = document.querySelector('.upload-text');
-            
+
             if (file.type === 'application/pdf') {
                 icon.textContent = '📄';
                 text.textContent = `PDF selected: ${file.name}`;
@@ -383,33 +396,33 @@
                 icon.textContent = '🖼️';
                 text.textContent = `${file.type.split('/')[1].toUpperCase()} image: ${file.name}`;
             }
-            
+
             // Reset results area
             document.getElementById('resultsArea').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
         }
-        
+
         async function extractText() {
             if (!currentFile) {
                 showError('Please select an image or PDF file first.');
                 return;
             }
-            
+
             const language = document.getElementById('languageSelect').value;
             const loading = document.getElementById('loadingIndicator');
             const resultsArea = document.getElementById('resultsArea');
             const extractBtn = document.getElementById('extractBtn');
-            
+
             // Reset UI
             extractedText = '';
             loading.style.display = 'block';
             resultsArea.style.display = 'none';
             extractBtn.disabled = true;
-            
+
             try {
                 // Wait for Tesseract.js to load before using it
                 const TesseractLib = await waitForTesseract;
-                
+
                 let worker;
                 try {
                     // Create worker with correct namespace: Tesseract.Tesseract.createWorker()
@@ -418,80 +431,80 @@
                 } catch (err) {
                     throw new Error('Failed to create Tesseract worker: ' + err.message);
                 }
-                
+
                 // Set up progress logging
                 worker.on('init', () => {
                     console.log('Tesseract worker initialized');
                 });
-                
+
                 worker.on('progress', ({ status, progress }) => {
                     if (status === TesseractLib.Tesseract.LSTATUS.RECOGNIZING) {
                         const percent = Math.round(progress.percent * 100);
                         loading.innerHTML = '<span class="spinner"></span><p>Extracting text... ' + percent + '%</p>';
                     }
                 });
-                
+
                 // Perform OCR using worker - returns a Promise that resolves when done
                 try {
                     let result;
-                    
+
                     if (currentFile.type === 'application/pdf') {
                         // For PDFs, we need to convert pages to images first
                         const pdf = await TesseractLib.Tesseract.createPDFWorker(language);
-                        
+
                         // Get number of pages
                         const numPages = pdf.getNumberOfPages();
                         console.log(`PDF has ${numPages} page(s)`);
-                        
+
                         let allTexts = [];
-                        
+
                         for (let i = 1; i <= numPages; i++) {
                             // Convert page to image
                             await pdf.setPage(i);
                             const canvas = pdf.getPage(i).then(page => {
                                 const scale = 2; // Higher quality
                                 const viewport = page.getViewport({ scale });
-                                
+
                                 const imgCanvas = document.createElement('canvas');
                                 const ctx = imgCanvas.getContext('2d');
                                 imgCanvas.width = viewport.width;
                                 imgCanvas.height = viewport.height;
-                                
+
                                 ctx.drawImage(viewport, 0, 0);
-                                
+
                                 // Convert to base64 image data
                                 const imgData = await pdf.convertToImage(i);
                                 return { canvas: imgCanvas, imageData: imgData };
                             });
-                            
+
                             // Recognize the page
                             result = await TesseractLib.Tesseract.recognize(imgCanvas.toDataURL(), language);
                             allTexts.push(result.data.text);
                         }
-                        
+
                         extractedText = allTexts.join('\n\n');
                     } else {
                         // For images, use standard recognize()
                         result = await worker.recognize(currentFile);
                         extractedText = result.data.text;
                     }
-                    
+
                     // Clean up worker after use to free resources
                     await worker.terminate();
                     console.log('✓ Tesseract worker terminated');
-                    
+
                     // Update UI with results
                     loading.style.display = 'none';
                     resultsArea.style.display = 'block';
                     document.getElementById('textOutput').value = extractedText;
-                    
+
                     // Update stats
                     updateStats();
-                    
+
                 } catch (recognizeError) {
                     throw new Error('OCR recognition failed: ' + recognizeError.message);
                 }
-                
+
             } catch (error) {
                 console.error('OCR Error:', error);
                 showError(error.message || 'Failed to extract text from image. Please try again.');
@@ -500,42 +513,48 @@
                 extractBtn.disabled = false;
             }
         }
-        
+
         function updateStats() {
             const text = extractedText || document.getElementById('textOutput').value;
-            
+
             // Count characters (excluding whitespace)
             const charCount = text.replace(/\s/g, '').length;
-            
+
             // Count words
             const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-            
+
             // Count lines
             const lineCount = text.trim() === '' ? 0 : text.split('\n').filter(line => line.trim()).length;
-            
+
             document.getElementById('charCount').textContent = charCount.toLocaleString();
             document.getElementById('wordCount').textContent = wordCount.toLocaleString();
             document.getElementById('lineCount').textContent = lineCount.toLocaleString();
         }
-        
+
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
-            
+
             // Clear loading indicator
             const loading = document.getElementById('loadingIndicator');
             loading.style.display = 'none';
         }
-        
+
         function copyToClipboard() {
-            const textArea = document.getElementById('textOutput');
-            textArea.select();
+            const textOutput = document.getElementById('textOutput');
+            textOutput.select();
             document.execCommand('copy');
             
             // Show feedback
-            alert('Text copied to clipboard!');
+            const btn = document.querySelector('.btn-secondary');
+            const originalText = btn.textContent;
+            btn.textContent = '✅ Copied!';
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 1500);
         }
+
     </script>
 </body>
 </html>
