@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://trigun6187.github.io/img2txtocr/sitemap.xml
