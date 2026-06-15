@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How to Extract Text from Images: Complete OCR Guide | img2txt</title>
-    <meta name="description" content="Step-by-step guide on using free online OCR to extract text from images, screenshots, and PDFs. Learn preprocessing tricks, supported languages, and best practices.">
+    <title>OCR Tutorials: Extract Text from Screenshots, PDFs &amp; Photos | img2txt</title>
+    <meta name="description" content="Comprehensive OCR tutorials covering how to extract text from screenshots, convert PDF images to editable text, use OCR on mobile devices, and compare Tesseract.js vs commercial APIs.">
     <meta name="robots" content="index, follow">
 
-    <meta property="og:title" content="How to Extract Text from Images: Complete OCR Guide">
-    <meta property="og:description" content="Step-by-step guide on using free online OCR to extract text from images, screenshots, and PDFs.">
+    <meta property="og:title" content="OCR Tutorials: Extract Text from Screenshots, PDFs &amp; Photos">
+    <meta property="og:description" content="Comprehensive OCR tutorials covering how to extract text from screenshots, convert PDF images to editable text, use OCR on mobile devices, and more.">
     <meta property="og:url" content="https://trigun6187.github.io/img2txtocr/blog/ocr-tutorials.html">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Image to Text Converter">
     <meta property="og:locale" content="en_US">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="How to Extract Text from Images: Complete OCR Guide">
-    <meta name="twitter:description" content="Step-by-step guide on using free online OCR to extract text from images, screenshots, and PDFs.">
+    <meta name="twitter:title" content="OCR Tutorials: Extract Text from Screenshots, PDFs &amp; Photos">
+    <meta name="twitter:description" content="Comprehensive OCR tutorials covering how to extract text from screenshots, convert PDF images to editable text, and more.">
 
     <link rel="canonical" href="https://trigun6187.github.io/img2txtocr/blog/ocr-tutorials.html">
     <link rel="icon" href="../icon.svg" type="image/svg+xml">
@@ -30,12 +30,13 @@
             --text-muted: #999999;
             --bg-input: #f5f5f5;
             --border-section: #e0e0e0;
-            --code-bg: #f0f0f0;
             --shadow: rgba(0,0,0,0.3);
             --bg-tip: #e8f5e9;
             --border-tip: #a5d6a7;
             --bg-highlight: #fff3e0;
             --border-highlight: #ffcc80;
+            --bg-table-alt: #f9f9ff;
+            --table-hd: #667eea;
         }
         [data-theme="dark"] {
             --bg-body: #0f0c29;
@@ -45,12 +46,13 @@
             --text-muted: #777777;
             --bg-input: #2a2a4a;
             --border-section: #2a2a4a;
-            --code-bg: #252540;
             --shadow: rgba(0,0,0,0.5);
             --bg-tip: #1b3a1b;
             --border-tip: #388e3c;
             --bg-highlight: #3a2e1b;
             --border-highlight: #f57c00;
+            --bg-table-alt: #1e1e38;
+            --table-hd: #4a4a8a;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -61,7 +63,7 @@
             transition: background 0.3s;
         }
         .container {
-            max-width: 800px;
+            max-width: 820px;
             margin: 0 auto;
             background: var(--bg-container);
             border-radius: 16px;
@@ -81,8 +83,15 @@
         .meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; font-weight: 600; }
         .back-link:hover { text-decoration: underline; }
-        h2 { color: var(--text-primary); font-size: 1.4rem; margin: 30px 0 12px; }
-        h3 { color: var(--text-primary); font-size: 1.15rem; margin: 20px 0 10px; }
+        .toc { background: var(--bg-input); padding: 20px 24px; border-radius: 12px; margin: 20px 0 30px; }
+        .toc h3 { margin-bottom: 10px; font-size: 1rem; }
+        .toc ul { list-style: none; padding: 0; }
+        .toc li { margin-bottom: 6px; }
+        .toc a { color: #667eea; text-decoration: none; font-size: 0.92rem; }
+        .toc a:hover { text-decoration: underline; }
+        h2 { color: var(--text-primary); font-size: 1.4rem; margin: 40px 0 12px; padding-top: 8px; border-top: 2px solid var(--border-section); }
+        h2:first-of-type { border-top: none; }
+        h3 { color: var(--text-primary); font-size: 1.1rem; margin: 20px 0 10px; }
         p, li { color: var(--text-secondary); line-height: 1.75; font-size: 0.95rem; }
         ul, ol { padding-left: 22px; margin: 10px 0; }
         li { margin-bottom: 6px; }
@@ -92,95 +101,270 @@
         }
         .tip { background: var(--bg-tip); border-color: var(--border-tip); }
         .highlight { background: var(--bg-highlight); border-color: var(--border-highlight); }
-        code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+        .table-wrap { overflow-x: auto; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-section); color: var(--text-primary); transition: color 0.3s, border-color 0.3s; }
+        th { background: var(--table-hd); color: #fff; font-weight: 600; }
+        tr:nth-child(even) td { background: var(--bg-table-alt); }
         .footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: var(--text-muted); }
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 20px; }
-            h1 { font-size: 1.4rem; }
+            h1 { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header-row">
-            <h1>How to Extract Text from Images: Complete OCR Guide</h1>
+            <h1>OCR Tutorials &amp; Guides</h1>
             <button id="themeToggle" aria-label="Toggle dark mode">🌙</button>
         </div>
-        <div class="meta">Published June 15, 2026 &middot; Blog &middot; <a href="../" style="color:#667eea;">img2txt</a></div>
-        <a class="back-link" href=".">&larr; Back to Blog</a>
+        <div class="meta">Updated June 15, 2026 &middot; <a href="../" style="color:#667eea;">img2txt</a> &middot; <a href="." style="color:#667eea;">Blog</a></div>
+        <a class="back-link" href=".">&larr; Back to Blog Hub</a>
 
-        <h2>What is OCR?</h2>
-        <p>Optical Character Recognition (OCR) is a technology that converts images of text — from scanned documents, photos, or screenshots — into machine-readable text you can edit, copy, and search.</p>
+        <p style="margin-bottom:20px;">This guide covers five essential OCR topics &mdash; from extracting text out of screenshots and PDFs to using OCR on your phone and understanding how browser-based Tesseract.js compares to commercial APIs.</p>
 
-        <h2>Why Use a Free Online OCR Tool?</h2>
-        <p>Free online OCR tools like <a href="../" style="color:#667eea;">img2txt</a> let you extract text without signing up, installing software, or uploading files to a server. Everything runs in your browser, so your images and text never leave your device.</p>
-
-        <div class="highlight">
-            <strong>Privacy first:</strong> img2txt processes everything locally in your browser. No uploads, no servers, no data leaks.
+        <div class="toc">
+            <h3>In this guide</h3>
+            <ul>
+                <li><a href="#screenshots">1. How to Extract Text from Screenshots Using Free OCR</a></li>
+                <li><a href="#pdf">2. Convert PDF Images to Editable Text Online Without Signup</a></li>
+                <li><a href="#mobile">3. Best Free Image to Text Converter for Android and iOS</a></li>
+                <li><a href="#compare">4. OCR Tools Compared: Tesseract.js vs Commercial APIs</a></li>
+                <li><a href="#phone-ocr">5. How to Use OCR on Mobile Phone to Extract Text from Photos</a></li>
+            </ul>
         </div>
 
-        <h2>How to Use img2txt OCR</h2>
+        <!-- SECTION 1 -->
+        <h2 id="screenshots">How to Extract Text from Screenshots Using Free OCR Tool</h2>
+        <p>Screenshots are one of the most common sources of text for OCR. Whether you are capturing an error message, a tweet, a slide from a presentation, or a receipt, a screenshot gives you a static image that you can process with an <a href="../">online OCR tool</a>.</p>
+
+        <h3>Why Screenshots Work Well for OCR</h3>
+        <p>Unlike photos of physical documents, screenshots are digital-born images. They tend to have sharp edges, consistent lighting, and no perspective distortion. This makes them ideal for OCR &mdash; most screenshots of typed text achieve 97&ndash;99% character accuracy with tools like <a href="../">img2txt</a>.</p>
+
+        <div class="tip">
+            <strong>Best results:</strong> Screenshots of black text on a white background, captured at 100% zoom, produce the highest OCR accuracy. Avoid compressed JPEG screenshots &mdash; save as PNG instead.
+        </div>
+
+        <h3>Step-by-Step: Extract Text from a Screenshot</h3>
         <ol>
-            <li><strong>Upload an image or PDF</strong> — Drag and drop or click to choose a file. Supported formats: JPG, PNG, WebP, BMP, GIF, and PDF.</li>
-            <li><strong>Select the language</strong> — Choose from English, Spanish, French, German, and many more.</li>
-            <li><strong>Choose a layout mode</strong> — Auto works for most documents. Try Single Column for articles, Sparse Text for signs or labels.</li>
-            <li><strong>Enable Auto Enhance</strong> — On by default; it adjusts brightness, contrast, and grayscale to optimize OCR accuracy.</li>
-            <li><strong>Click Extract Text</strong> — Watch the progress bar as Tesseract.js processes your file.</li>
-            <li><strong>Copy or download</strong> — Once done, copy the extracted text or download it as a .txt file.</li>
+            <li><strong>Capture your screenshot</strong> &mdash; Use <kbd>Win+Shift+S</kbd> (Windows), <kbd>Cmd+Shift+4</kbd> (macOS), or Power+Volume-Down (Android). Save it as a PNG file.</li>
+            <li><strong>Open <a href="../">img2txt</a> in your browser</strong> &mdash; No sign-up, no install. Works on desktop and mobile.</li>
+            <li><strong>Upload the screenshot</strong> &mdash; Click or drag the file into the upload area. The tool accepts JPG, PNG, WebP, and BMP.</li>
+            <li><strong>Select the language</strong> &mdash; English is the default. Change it if your screenshot contains other languages.</li>
+            <li><strong>Enable Auto Enhance</strong> &mdash; Leave this on (it is checked by default). It automatically adjusts brightness and contrast for optimal OCR.</li>
+            <li><strong>Choose a layout</strong> &mdash; "Auto" works for most screenshots. Use "Single Column" for articles or long-form text.</li>
+            <li><strong>Click "Extract Text"</strong> &mdash; The progress bar shows the worker initializing and processing the image.</li>
+            <li><strong>Copy or download</strong> &mdash; Once the confidence badge appears, copy the text to your clipboard or download it as a .txt file.</li>
+        </ol>
+
+        <div class="highlight">
+            <strong>Pro tip:</strong> If you OCR the same type of screenshot regularly (e.g. weekly reports), the <strong>extraction history</strong> feature stores your last 10 results. Click any past entry to restore it.
+        </div>
+
+        <h3>Common Screenshot OCR Problems &amp; Fixes</h3>
+        <ul>
+            <li><strong>Blurry text after resizing:</strong> Capture at native resolution. img2txt auto-upscales images under 300px.</li>
+            <li><strong>Colored text on colored background:</strong> Enable the grayscale toggle or keep Auto Enhance on &mdash; it will convert to grayscale when it detects high color noise.</li>
+            <li><strong>Very small text:</strong> Increase the brightness slider (or let Auto Enhance handle it).</li>
+            <li><strong>Multi-column layout:</strong> Switch the PSM dropdown to "Single Column" or "Single Block" depending on the layout.</li>
+        </ul>
+
+        <p><a href="../" style="color:#667eea;">Try extracting text from your screenshot now &rarr;</a></p>
+
+        <!-- SECTION 2 -->
+        <h2 id="pdf">Convert PDF Images to Editable Text Online Without Signup</h2>
+        <p>PDFs are everywhere &mdash; reports, invoices, scanned books, contracts. But many PDFs contain text as images (scanned pages) rather than selectable text. Extracting that text usually requires expensive software or uploading sensitive documents to a third-party server.</p>
+
+        <h3>The Problem with Traditional PDF OCR</h3>
+        <p>Most online PDF OCR services require you to:</p>
+        <ul>
+            <li>Create an account or sign in with Google</li>
+            <li>Upload the PDF to their cloud servers</li>
+            <li>Wait for server-side processing</li>
+            <li>Download the result &mdash; often with watermarks on the free tier</li>
+        </ul>
+        <p>This raises serious <strong>privacy concerns</strong> when the PDF contains confidential information like contracts, medical records, or financial statements.</p>
+
+        <div class="highlight">
+            <strong>The img2txt solution:</strong> All processing happens locally in your browser. Your PDF <em>never</em> leaves your device. No upload, no signup, no watermarks.
+        </div>
+
+        <h3>How to Convert a PDF to Text with img2txt</h3>
+        <ol>
+            <li><strong>Open <a href="../">img2txt</a></strong> in any modern browser (Chrome, Edge, Firefox, Safari).</li>
+            <li><strong>Upload your PDF</strong> &mdash; Maximum file size is 50 MB. The tool uses PDF.js to render each page as an image client-side.</li>
+            <li><strong>Select language and layout</strong> &mdash; Choose the language of your document. "Single Column" works well for most scanned PDFs.</li>
+            <li><strong>Enable Auto Enhance</strong> &mdash; Scanned pages often have uneven lighting. Auto Enhance compensates for shadows and faded ink.</li>
+            <li><strong>Click "Extract Text"</strong> &mdash; Progress updates show which page is being processed.</li>
         </ol>
 
         <div class="tip">
-            <strong>Pro tip:</strong> For best results, use clear, high-resolution images with high-contrast text. Screenshots of typed text usually produce near-perfect accuracy.
+            <strong>For best results with scanned PDFs:</strong> Use a scanner resolution of at least 300 DPI. Darken the contrast in your scanner settings if the original document is faded. For multi-page PDFs, img2txt processes every page sequentially.
         </div>
 
-        <h2>Supported Languages</h2>
-        <p>img2txt supports over 20 languages including English, Spanish, French, German, Italian, Portuguese, Russian, Chinese (Simplified &amp; Traditional), Japanese, Korean, Arabic, Hindi, and more. The tool downloads the required language data on demand.</p>
-
-        <h2>Image Preprocessing Tips</h2>
-        <h3>Auto Enhance</h3>
-        <p>The built-in Auto Enhance feature analyzes your image and automatically applies the optimal grayscale, brightness, and contrast settings. It samples a 400&times;400 pixel region to measure average brightness, contrast spread, and color saturation.</p>
-
-        <h3>Manual Adjustments</h3>
-        <p>When Auto Enhance is off, you can fine-tune settings yourself:</p>
+        <h3>What to Do with the Extracted Text</h3>
         <ul>
-            <li><strong>Grayscale:</strong> Removes color noise for cleaner text edges.</li>
-            <li><strong>Brightness:</strong> Lighten dark or shadowed images.</li>
-            <li><strong>Contrast:</strong> Enhance the difference between text and background.</li>
+            <li><strong>Copy to clipboard</strong> &mdash; Paste into Word, Google Docs, or your email.</li>
+            <li><strong>Download as .txt</strong> &mdash; Save the raw text file for archiving or further processing.</li>
+            <li><strong>Check confidence</strong> &mdash; The color-coded badge (green/orange/red) tells you how reliable the extraction is. Review orange or red sections manually.</li>
         </ul>
 
-        <h3>Small Images</h3>
-        <p>Images under 300 pixels are automatically up-scaled using smooth interpolation to improve OCR readability.</p>
+        <p><a href="../" style="color:#667eea;">Convert your PDF to editable text now &rarr;</a></p>
 
-        <h2>Layout Modes Explained</h2>
-        <ul>
-            <li><strong>Auto (Default):</strong> Best for general use — Tesseract decides the page layout.</li>
-            <li><strong>Single Column:</strong> Great for articles, letters, and reports with one column of text.</li>
-            <li><strong>Single Block:</strong> Treats the entire image as one block of text.</li>
-            <li><strong>Sparse Text:</strong> Ideal for signs, labels, and pages with scattered text.</li>
-        </ul>
+        <!-- SECTION 3 -->
+        <h2 id="mobile">Best Free Image to Text Converter for Android and iOS</h2>
+        <p>Mobile OCR is increasingly popular for capturing text on the go &mdash; business cards, whiteboards, restaurant menus, street signs, or product labels. Here is how img2txt and other top mobile-friendly OCR tools compare.</p>
 
-        <h2>PDF OCR</h2>
-        <p>img2txt can also extract text from PDFs (up to 50 MB). It uses PDF.js to render each page as an image, then runs OCR on every page. All processing stays in your browser.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>img2txt</th>
+                        <th>Google Lens</th>
+                        <th>Microsoft Lens</th>
+                        <th>Adobe Scan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Platform</td><td>Web (PWA)</td><td>Android, iOS</td><td>Android, iOS</td><td>Android, iOS</td></tr>
+                    <tr><td>Install required</td><td class="tip" style="background:var(--bg-tip);border:0;padding:10px 12px;">No (browser)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                    <tr><td>Offline capable</td><td class="tip" style="background:var(--bg-tip);border:0;padding:10px 12px;">Yes (PWA)</td><td>Partial</td><td>No</td><td>No</td></tr>
+                    <tr><td>Camera capture</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                    <tr><td>No sign-up</td><td>Yes</td><td>Google account</td><td>Microsoft account</td><td>Adobe account</td></tr>
+                    <tr><td>No server upload</td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr>
+                    <tr><td>PDF output</td><td>.txt only</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                    <tr><td>Language support</td><td>20+</td><td>100+</td><td>30+</td><td>20+</td></tr>
+                    <tr><td>Dark mode</td><td>Yes</td><td>System</td><td>System</td><td>No</td></tr>
+                    <tr><td>Cost</td><td>Free</td><td>Free</td><td>Free</td><td>Free (limited)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Why img2txt Is the Best Choice for Mobile Privacy</h3>
+        <p>Google Lens, Microsoft Lens, and Adobe Scan all upload your photos to cloud servers for OCR processing. img2txt runs entirely in the browser on-device &mdash; even on mobile Safari and Chrome. When you capture a photo with the built-in camera feature (<code>capture="environment"</code>), the image never leaves your phone.</p>
 
         <div class="tip">
-            <strong>Pro tip:</strong> For scanned PDFs, enable Auto Enhance and use "Single Column" layout for the best results on multi-page documents.
+            <strong>PWA install:</strong> On Android, tap "Add to Home Screen" in Chrome to install img2txt as a standalone app. It works offline and uses the phone camera directly. On iOS, use Share &rarr; Add to Home Screen in Safari.
         </div>
 
-        <h2>Frequently Asked Questions</h2>
-        <h3>Is img2txt free?</h3>
-        <p>Yes, completely free. No sign-ups, no usage limits, no hidden charges.</p>
+        <h3>When to Use Each Tool</h3>
+        <ul>
+            <li><strong>img2txt</strong> &mdash; When privacy matters, you need offline support, or you just want a quick text copy without creating yet another account.</li>
+            <li><strong>Google Lens</strong> &mdash; Best for real-time augmented reality translation and smart text selection in the camera viewfinder.</li>
+            <li><strong>Microsoft Lens</strong> &mdash; Great for digitizing whiteboards and scanning to PDF, especially if you use Microsoft 365.</li>
+            <li><strong>Adobe Scan</strong> &mdash; Excellent for high-quality document scanning with auto-cropping and enhancement, but requires an Adobe account.</li>
+        </ul>
 
-        <h3>Are my files uploaded to a server?</h3>
-        <p>No. img2txt uses <a href="https://github.com/naptha/tesseract.js" style="color:#667eea;" target="_blank" rel="noopener">Tesseract.js</a>, a JavaScript port of the Tesseract OCR engine, to process everything locally in your browser. Your files never leave your device.</p>
+        <p><a href="../" style="color:#667eea;">Use img2txt on your phone now &rarr;</a></p>
 
-        <h3>What image formats are supported?</h3>
-        <p>JPG, PNG, WebP, BMP, GIF, and PDF. Maximum file size: 10 MB for images, 50 MB for PDFs.</p>
+        <!-- SECTION 4 -->
+        <h2 id="compare">OCR Tools Compared: Tesseract.js vs Commercial APIs</h2>
+        <p>Under the hood, every OCR tool runs on an engine. img2txt uses <a href="https://github.com/naptha/tesseract.js" target="_blank" rel="noopener" style="color:#667eea;">Tesseract.js</a>, a JavaScript port of Google's Tesseract OCR engine. But how does it compare to commercial APIs like Google Cloud Vision, AWS Textract, and Azure Cognitive Services?</p>
 
-        <h3>How accurate is it?</h3>
-        <p>Accuracy depends on image quality. Clean, high-contrast images of printed or typed text routinely achieve 95–99% character accuracy. Handwritten text and low-quality images are more challenging.</p>
+        <h3>What Is Tesseract.js?</h3>
+        <p>Tesseract.js compiles the Tesseract OCR engine (written in C++) into WebAssembly so it runs directly in the browser. It supports 100+ languages and includes configurable page segmentation modes (PSM). Version 5 (used by img2txt) adds the <code>rotateAuto</code> feature for auto-orientation detection.</p>
 
-        <div class="footer">&copy; 2026 <a href="../" style="color:inherit;">img2txt</a> &middot; <a href="." style="color:inherit;">Blog</a></div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Tesseract.js (img2txt)</th>
+                        <th>Google Cloud Vision</th>
+                        <th>AWS Textract</th>
+                        <th>Azure AI OCR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Processing location</td><td>Browser (client-side)</td><td>Cloud server</td><td>Cloud server</td><td>Cloud server</td></tr>
+                    <tr><td>Cost</td><td>Free</td><td>$1.50 / 1000 pages</td><td>$1.50 / 1000 pages</td><td>$1.00 / 1000 pages</td></tr>
+                    <tr><td>No data leaves device</td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr>
+                    <tr><td>Accuracy (clean text)</td><td>95-99%</td><td>98-99%</td><td>98-99%</td><td>98-99%</td></tr>
+                    <tr><td>Handwriting support</td><td>Limited</td><td>Good</td><td>Good</td><td>Good</td></tr>
+                    <tr><td>Form / table extraction</td><td>No</td><td>Yes (Form Parser)</td><td>Yes (tables)</td><td>Yes</td></tr>
+                    <tr><td>Language support</td><td>100+ via Tesseract</td><td>200+</td><td>20+</td><td>160+</td></tr>
+                    <tr><td>Latency (no network)</td><td>Instant (local)</td><td>1-3s (network dependant)</td><td>1-3s</td><td>1-3s</td></tr>
+                    <tr><td>API key required</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                    <tr><td>Rate limits</td><td>None</td><td>1000/min (tiered)</td><td>Depends on quota</td><td>20-50 req/min</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>When to Choose Tesseract.js</h3>
+        <ul>
+            <li><strong>Privacy is critical</strong> &mdash; Medical records, legal documents, or proprietary data that cannot be uploaded to a third party.</li>
+            <li><strong>Budget is zero</strong> &mdash; Tesseract.js is completely free with no usage limits.</li>
+            <li><strong>Offline use</strong> &mdash; Once the language data is cached, Tesseract.js works without any internet connection.</li>
+            <li><strong>Rapid prototyping</strong> &mdash; No API keys, no SDK setup, no authentication.</li>
+        </ul>
+
+        <h3>When to Use a Commercial API</h3>
+        <ul>
+            <li><strong>Handwritten text</strong> &mdash; Commercial APIs have dedicated handwriting recognition models that outperform Tesseract significantly.</li>
+            <li><strong>Tables and forms</strong> &mdash; AWS Textract and Google Form Parser extract structured data (key-value pairs, table cells) which Tesseract does not support natively.</li>
+            <li><strong>Very high throughput</strong> &mdash; Processing millions of documents is faster on dedicated cloud infrastructure than on a browser's single-threaded worker.</li>
+            <li><strong>Multi-language mixed documents</strong> &mdash; Commercial APIs auto-detect and switch between languages in a single document more reliably.</li>
+        </ul>
+
+        <div class="tip">
+            <strong>Bottom line:</strong> For 90% of everyday OCR tasks &mdash; extracting text from screenshots, scanned documents, signs, and PDFs &mdash; Tesseract.js is more than sufficient and has the unmatched advantage of being <strong>free and private</strong>. Use commercial APIs only when you need handwriting recognition or structured table extraction at scale.
+        </div>
+
+        <p><a href="../" style="color:#667eea;">Try the Tesseract.js-powered img2txt OCR tool &rarr;</a></p>
+
+        <!-- SECTION 5 -->
+        <h2 id="phone-ocr">How to Use OCR on Mobile Phone to Extract Text from Photos</h2>
+        <p>Your phone's camera is a powerful OCR input device. With img2txt, you can capture a photo of any text &mdash; a restaurant menu, a shipping label, a whiteboard, a page in a book &mdash; and extract the text in seconds, all on-device.</p>
+
+        <h3>Why Use Your Phone Camera for OCR?</h3>
+        <ul>
+            <li><strong>No scanner needed</strong> &mdash; A modern phone camera (12 MP or higher) captures enough detail for reliable OCR.</li>
+            <li><strong>Instant capture</strong> &mdash; No need to save a photo first and then upload it. Capture directly from the tool.</li>
+            <li><strong>Portable</strong> &mdash; OCR any text you encounter, wherever you are.</li>
+        </ul>
+
+        <div class="highlight">
+            <strong>Privacy note:</strong> When you use the camera capture feature on img2txt, the photo stays on your phone. It is never uploaded to any server.
+        </div>
+
+        <h3>Step-by-Step: Mobile OCR with img2txt</h3>
+        <ol>
+            <li><strong>Open <a href="../">img2txt</a> on your phone</strong> &mdash; Works in Chrome, Safari, Firefox, and Samsung Internet.</li>
+            <li><strong>Tap the upload area</strong> &mdash; On mobile, this opens a file picker with a "Take Photo" option (uses the rear camera by default).</li>
+            <li><strong>Take a photo of the text</strong> &mdash; Hold the phone steady. Ensure the text is flat, evenly lit, and fills most of the frame.</li>
+            <li><strong>Adjust settings</strong> &mdash; Select the language. Auto Enhance is on by default &mdash; it corrects lighting, contrast, and rotation.</li>
+            <li><strong>Tap "Extract Text"</strong> &mdash; Processing happens on-device. The progress bar keeps you informed.</li>
+            <li><strong>Copy text</strong> &mdash; Tap the copy button to paste the text into any app.</li>
+        </ol>
+
+        <h3>Tips for the Best Mobile OCR Results</h3>
+        <ul>
+            <li><strong>Lighting:</strong> Use natural daylight or position a lamp so the text is evenly lit. Avoid direct flash &mdash; it creates glare.</li>
+            <li><strong>Distance:</strong> Hold the camera about 20&ndash;30 cm (8&ndash;12 inches) from the page. The text should fill at least half the frame.</li>
+            <li><strong>Angle:</strong> Shoot straight-on (parallel to the page). Perspective distortion reduces OCR accuracy. img2txt does not auto-deskew, so keep the camera parallel.</li>
+            <li><strong>Focus:</strong> Tap the screen to focus on the text before taking the photo. Blurry photos produce garbage OCR output.</li>
+            <li><strong>Background:</strong> Place dark text on a light, solid background. Avoid textured surfaces or patterned backgrounds.</li>
+        </ul>
+
+        <h3>Mobile OCR Use Cases</h3>
+        <ul>
+            <li><strong>Business cards</strong> &mdash; Capture a card and extract the name, phone number, and email instantly.</li>
+            <li><strong>Whiteboards</strong> &mdash; Photograph meeting notes and convert them to searchable text.</li>
+            <li><strong>Restaurant menus</strong> &mdash; Extract the text to translate it or save it for later.</li>
+            <li><strong>Shipping labels</strong> &mdash; Record tracking numbers without typing.</li>
+            <li><strong>Books &amp; articles</strong> &mdash; Capture a page and quote it directly instead of retyping.</li>
+        </ul>
+
+        <div class="tip">
+            <strong>Pro tip for iOS:</strong> If you are on iOS 15+, you can use Live Text (built into the Photos app) for instant text selection. For Android, img2txt provides the same capability without any OS version requirements &mdash; and it works for any language Tesseract supports.
+        </div>
+
+        <p><a href="../" style="color:#667eea;">Try mobile OCR on your phone now &rarr;</a></p>
+
+        <div class="footer">&copy; 2026 <a href="../" style="color:inherit;">img2txt</a> &middot; <a href="." style="color:inherit;">Blog</a> &middot; <a href="../sitemap.xml" style="color:inherit;">Sitemap</a></div>
     </div>
 
     <script>
