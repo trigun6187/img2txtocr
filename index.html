@@ -302,22 +302,22 @@
             text-align: right;
         }
 
-.option-row input[type="checkbox"] {
-    accent-color: #667eea;
-    width: 18px;
-    height: 18px;
-}
+        .option-row input[type="checkbox"] {
+            accent-color: #667eea;
+            width: 18px;
+            height: 18px;
+        }
 
-.option-row select.layout-select {
-    flex: 1;
-    min-width: 100px;
-    padding: 6px 10px;
-    font-size: 0.85rem;
-    background: var(--bg-input);
-    color: var(--text-primary);
-    border: 1px solid var(--border-section);
-    border-radius: 6px;
-}
+        .option-row select.layout-select {
+            flex: 1;
+            min-width: 100px;
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-section);
+            border-radius: 6px;
+        }
 
         .controls {
             display: flex;
@@ -359,6 +359,30 @@
         .btn-success {
             background: #4caf50;
             color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .footer-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .footer-share {
+            display: inline-flex;
+            gap: 10px;
+            margin-top: 8px;
         }
 
         button:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -400,6 +424,13 @@
             flex-wrap: wrap;
             gap: 10px;
             transition: border-color 0.3s;
+        }
+
+        .results-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .results-title {
@@ -652,13 +683,13 @@
 
         <div class="results-area" id="resultsArea">
             <div class="results-header">
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <div class="results-title-group">
                     <h2 class="results-title">Extracted Text</h2>
                     <span class="confidence-badge" id="confidenceBadge"></span>
                 </div>
                 <div class="action-buttons">
                     <button class="btn-secondary" id="copyBtn" aria-label="Copy extracted text to clipboard">Copy</button>
-                    <a id="downloadBtn" download="extracted-text.txt" href="#" class="btn-success" style="text-decoration: none; padding: 12px 20px; font-size: 1rem; border-radius: 8px; display: inline-block;" aria-label="Download extracted text as TXT file">Download</a>
+                    <a id="downloadBtn" download="extracted-text.txt" href="#" class="btn-success" aria-label="Download extracted text as TXT file">Download</a>
                 </div>
             </div>
 
@@ -746,7 +777,6 @@
         }
 
         function trackTiming() {
-            var start = Date.now();
             var intervals = [30, 60, 120, 300];
             intervals.forEach(function(sec) {
                 setTimeout(function() {
@@ -1114,7 +1144,7 @@
                         if (auto.brightness !== 100) parts.push('brightness ' + auto.brightness + '%');
                         if (auto.contrast !== 100) parts.push('contrast ' + auto.contrast + '%');
                         document.getElementById('loadingText').textContent =
-                            (parts.length ? 'Auto: ' + parts.join(', ') + ' &mdash; ' : '') +
+                            (parts.length ? 'Auto: ' + parts.join(', ') + ' \u2014 ' : '') +
                             'Extracting text...';
                     } else {
                         if (!grayscale && brightness === 100 && contrast === 100) {
@@ -1156,7 +1186,6 @@
             var loadingText = document.getElementById('loadingText');
             var resultsArea = document.getElementById('resultsArea');
             var extractBtn = document.getElementById('extractBtn');
-            var errorDiv = document.getElementById('errorMessage');
             var confidenceBadge = document.getElementById('confidenceBadge');
 
             extractedText = '';
@@ -1321,7 +1350,6 @@
             var shareText = preview ? preview + '\n\n' + msg : msg;
             var utm = 'utm_source=social&utm_medium=share&utm_campaign=promo';
             var shareUrl = baseUrl + '?' + utm;
-            var imgUrl = baseUrl + 'icon.svg';
 
             document.getElementById('shareTwitter').href =
                 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) +
@@ -1459,13 +1487,13 @@
 
         renderHistory();
     </script>
-    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">
-        v1.5 &middot; <a href="blog/" style="color:inherit;">Blog</a> &middot; <a href="#" id="privacyLink" style="color:inherit;">Privacy</a> &middot; <a href="https://github.com/trigun6187/img2txtocr" target="_blank" rel="noopener" style="color:inherit;">GitHub</a> &middot; img2txt
-        <br><span style="display: inline-flex; gap: 10px; margin-top: 8px;">
-            <a href="https://twitter.com/intent/tweet?text=Free%20online%20OCR%20tool%20%E2%80%94%20extract%20text%20from%20images%20and%20PDFs%20without%20signup%2C%20no%20uploads%2C%20100%25%20private.&url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on X">X</a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on LinkedIn">LinkedIn</a>
-            <a href="https://www.reddit.com/submit?title=Free%20Online%20OCR%20Tool%20%E2%80%94%20Image%20to%20Text%20Converter&url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on Reddit">Reddit</a>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on Facebook">Facebook</a>
+    <div class="footer">
+        v1.5 &middot; <a href="blog/" class="footer-link">Blog</a> &middot; <a href="#" id="privacyLink" class="footer-link">Privacy</a> &middot; <a href="https://github.com/trigun6187/img2txtocr" target="_blank" rel="noopener" class="footer-link">GitHub</a> &middot; img2txt
+        <br><span class="footer-share">
+            <a href="https://twitter.com/intent/tweet?text=Free%20online%20OCR%20tool%20%E2%80%94%20extract%20text%20from%20images%20and%20PDFs%20without%20signup%2C%20no%20uploads%2C%20100%25%20private.&url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" class="footer-link" aria-label="Share tool on X">X</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" class="footer-link" aria-label="Share tool on LinkedIn">LinkedIn</a>
+            <a href="https://www.reddit.com/submit?title=Free%20Online%20OCR%20Tool%20%E2%80%94%20Image%20to%20Text%20Converter&url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" class="footer-link" aria-label="Share tool on Reddit">Reddit</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" class="footer-link" aria-label="Share tool on Facebook">Facebook</a>
         </span>
     </div>
 
