@@ -13,9 +13,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="canonical" href="https://trigun6187.github.io/img2txtocr/">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="icon-192.png">
 
     <style>
         :root {
@@ -693,7 +694,6 @@
             TesseractLib.createWorker(lang).then(function(w) {
                 worker = w;
                 workerLang = lang;
-                console.log('Worker ready for:', lang);
             }).catch(function() {});
         }
 
