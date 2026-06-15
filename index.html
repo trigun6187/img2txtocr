@@ -261,11 +261,22 @@
             text-align: right;
         }
 
-        .option-row input[type="checkbox"] {
-            accent-color: #667eea;
-            width: 18px;
-            height: 18px;
-        }
+.option-row input[type="checkbox"] {
+    accent-color: #667eea;
+    width: 18px;
+    height: 18px;
+}
+
+.option-row select.layout-select {
+    flex: 1;
+    min-width: 100px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--border-section);
+    border-radius: 6px;
+}
 
         .controls {
             display: flex;
@@ -518,7 +529,7 @@
                 </div>
                 <div class="option-row">
                     <label for="optLayout">Layout</label>
-                    <select id="optLayout" style="flex:1;min-width:100px;padding:6px 10px;font-size:0.85rem;">
+                    <select id="optLayout" class="layout-select">
                         <option value="3">Auto (default)</option>
                         <option value="4">Single Column</option>
                         <option value="6">Single Block</option>
@@ -994,7 +1005,7 @@
 
                 if (isPDF) {
                     loadingText.textContent = 'Processing PDF...';
-                    extractedText = await processPDF(worker, loadingText);
+                    extractedText = await processPDF(worker, loadingText, autoRotate);
                 } else {
                     loadingText.textContent = 'Preprocessing image...';
 
@@ -1046,7 +1057,7 @@
             }
         }
 
-        async function processPDF(worker, loadingText) {
+        async function processPDF(worker, loadingText, autoRotate) {
             var pdfJsLib;
             try {
                 pdfJsLib = await loadPDFJS();
@@ -1058,6 +1069,8 @@
             var pdf = await pdfJsLib.getDocument({ data: arrayBuffer }).promise;
             var numPages = pdf.numPages;
             var allTexts = [];
+            var opts = { psm: parseInt(document.getElementById('optLayout').value) };
+            if (autoRotate) opts.rotateAuto = true;
 
             for (var i = 1; i <= numPages; i++) {
                 loadingText.textContent = 'Processing page ' + i + ' of ' + numPages + '...';
@@ -1072,7 +1085,7 @@
 
                 await page.render({ canvasContext: ctx, viewport: viewport }).promise;
                 var imageData = canvas.toDataURL('image/png');
-                var result = await worker.recognize(imageData);
+                var result = await worker.recognize(imageData, {}, opts);
                 allTexts.push(result.data.text);
             }
 
@@ -1217,6 +1230,6 @@
 
         renderHistory();
     </script>
-    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">v1.3 &middot; img2txt</div>
+    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">v1.4 &middot; img2txt</div>
 </body>
 </html>
