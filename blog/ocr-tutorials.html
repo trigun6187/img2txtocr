@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Extract Text from Images: Complete OCR Guide | img2txt</title>
+    <meta name="description" content="Step-by-step guide on using free online OCR to extract text from images, screenshots, and PDFs. Learn preprocessing tricks, supported languages, and best practices.">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="How to Extract Text from Images: Complete OCR Guide">
+    <meta property="og:description" content="Step-by-step guide on using free online OCR to extract text from images, screenshots, and PDFs.">
+    <meta property="og:url" content="https://trigun6187.github.io/img2txtocr/blog/ocr-tutorials.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Image to Text Converter">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="How to Extract Text from Images: Complete OCR Guide">
+    <meta name="twitter:description" content="Step-by-step guide on using free online OCR to extract text from images, screenshots, and PDFs.">
+
+    <link rel="canonical" href="https://trigun6187.github.io/img2txtocr/blog/ocr-tutorials.html">
+    <link rel="icon" href="../icon.svg" type="image/svg+xml">
+
+    <style>
+        :root {
+            --bg-body: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-container: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #555555;
+            --text-muted: #999999;
+            --bg-input: #f5f5f5;
+            --border-section: #e0e0e0;
+            --code-bg: #f0f0f0;
+            --shadow: rgba(0,0,0,0.3);
+            --bg-tip: #e8f5e9;
+            --border-tip: #a5d6a7;
+            --bg-highlight: #fff3e0;
+            --border-highlight: #ffcc80;
+        }
+        [data-theme="dark"] {
+            --bg-body: #0f0c29;
+            --bg-container: #1a1a2e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #aaaaaa;
+            --text-muted: #777777;
+            --bg-input: #2a2a4a;
+            --border-section: #2a2a4a;
+            --code-bg: #252540;
+            --shadow: rgba(0,0,0,0.5);
+            --bg-tip: #1b3a1b;
+            --border-tip: #388e3c;
+            --bg-highlight: #3a2e1b;
+            --border-highlight: #f57c00;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-container);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px var(--shadow);
+            padding: 40px;
+            transition: background 0.3s;
+        }
+        .header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 15px; }
+        h1 { color: var(--text-primary); font-size: 1.85rem; transition: color 0.3s; }
+        #themeToggle {
+            background: none; border: 2px solid var(--border-section); border-radius: 50%;
+            width: 42px; height: 42px; font-size: 1.3rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+            transition: background 0.2s; color: var(--text-primary);
+        }
+        #themeToggle:hover { background: var(--bg-input); }
+        .meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+        h2 { color: var(--text-primary); font-size: 1.4rem; margin: 30px 0 12px; }
+        h3 { color: var(--text-primary); font-size: 1.15rem; margin: 20px 0 10px; }
+        p, li { color: var(--text-secondary); line-height: 1.75; font-size: 0.95rem; }
+        ul, ol { padding-left: 22px; margin: 10px 0; }
+        li { margin-bottom: 6px; }
+        .tip, .highlight {
+            padding: 16px 20px; border-radius: 10px; margin: 20px 0;
+            border-left: 4px solid; transition: background 0.3s, border-color 0.3s;
+        }
+        .tip { background: var(--bg-tip); border-color: var(--border-tip); }
+        .highlight { background: var(--bg-highlight); border-color: var(--border-highlight); }
+        code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+        .footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: var(--text-muted); }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 20px; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-row">
+            <h1>How to Extract Text from Images: Complete OCR Guide</h1>
+            <button id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+        </div>
+        <div class="meta">Published June 15, 2026 &middot; Blog &middot; <a href="../" style="color:#667eea;">img2txt</a></div>
+        <a class="back-link" href=".">&larr; Back to Blog</a>
+
+        <h2>What is OCR?</h2>
+        <p>Optical Character Recognition (OCR) is a technology that converts images of text — from scanned documents, photos, or screenshots — into machine-readable text you can edit, copy, and search.</p>
+
+        <h2>Why Use a Free Online OCR Tool?</h2>
+        <p>Free online OCR tools like <a href="../" style="color:#667eea;">img2txt</a> let you extract text without signing up, installing software, or uploading files to a server. Everything runs in your browser, so your images and text never leave your device.</p>
+
+        <div class="highlight">
+            <strong>Privacy first:</strong> img2txt processes everything locally in your browser. No uploads, no servers, no data leaks.
+        </div>
+
+        <h2>How to Use img2txt OCR</h2>
+        <ol>
+            <li><strong>Upload an image or PDF</strong> — Drag and drop or click to choose a file. Supported formats: JPG, PNG, WebP, BMP, GIF, and PDF.</li>
+            <li><strong>Select the language</strong> — Choose from English, Spanish, French, German, and many more.</li>
+            <li><strong>Choose a layout mode</strong> — Auto works for most documents. Try Single Column for articles, Sparse Text for signs or labels.</li>
+            <li><strong>Enable Auto Enhance</strong> — On by default; it adjusts brightness, contrast, and grayscale to optimize OCR accuracy.</li>
+            <li><strong>Click Extract Text</strong> — Watch the progress bar as Tesseract.js processes your file.</li>
+            <li><strong>Copy or download</strong> — Once done, copy the extracted text or download it as a .txt file.</li>
+        </ol>
+
+        <div class="tip">
+            <strong>Pro tip:</strong> For best results, use clear, high-resolution images with high-contrast text. Screenshots of typed text usually produce near-perfect accuracy.
+        </div>
+
+        <h2>Supported Languages</h2>
+        <p>img2txt supports over 20 languages including English, Spanish, French, German, Italian, Portuguese, Russian, Chinese (Simplified &amp; Traditional), Japanese, Korean, Arabic, Hindi, and more. The tool downloads the required language data on demand.</p>
+
+        <h2>Image Preprocessing Tips</h2>
+        <h3>Auto Enhance</h3>
+        <p>The built-in Auto Enhance feature analyzes your image and automatically applies the optimal grayscale, brightness, and contrast settings. It samples a 400&times;400 pixel region to measure average brightness, contrast spread, and color saturation.</p>
+
+        <h3>Manual Adjustments</h3>
+        <p>When Auto Enhance is off, you can fine-tune settings yourself:</p>
+        <ul>
+            <li><strong>Grayscale:</strong> Removes color noise for cleaner text edges.</li>
+            <li><strong>Brightness:</strong> Lighten dark or shadowed images.</li>
+            <li><strong>Contrast:</strong> Enhance the difference between text and background.</li>
+        </ul>
+
+        <h3>Small Images</h3>
+        <p>Images under 300 pixels are automatically up-scaled using smooth interpolation to improve OCR readability.</p>
+
+        <h2>Layout Modes Explained</h2>
+        <ul>
+            <li><strong>Auto (Default):</strong> Best for general use — Tesseract decides the page layout.</li>
+            <li><strong>Single Column:</strong> Great for articles, letters, and reports with one column of text.</li>
+            <li><strong>Single Block:</strong> Treats the entire image as one block of text.</li>
+            <li><strong>Sparse Text:</strong> Ideal for signs, labels, and pages with scattered text.</li>
+        </ul>
+
+        <h2>PDF OCR</h2>
+        <p>img2txt can also extract text from PDFs (up to 50 MB). It uses PDF.js to render each page as an image, then runs OCR on every page. All processing stays in your browser.</p>
+
+        <div class="tip">
+            <strong>Pro tip:</strong> For scanned PDFs, enable Auto Enhance and use "Single Column" layout for the best results on multi-page documents.
+        </div>
+
+        <h2>Frequently Asked Questions</h2>
+        <h3>Is img2txt free?</h3>
+        <p>Yes, completely free. No sign-ups, no usage limits, no hidden charges.</p>
+
+        <h3>Are my files uploaded to a server?</h3>
+        <p>No. img2txt uses <a href="https://github.com/naptha/tesseract.js" style="color:#667eea;" target="_blank" rel="noopener">Tesseract.js</a>, a JavaScript port of the Tesseract OCR engine, to process everything locally in your browser. Your files never leave your device.</p>
+
+        <h3>What image formats are supported?</h3>
+        <p>JPG, PNG, WebP, BMP, GIF, and PDF. Maximum file size: 10 MB for images, 50 MB for PDFs.</p>
+
+        <h3>How accurate is it?</h3>
+        <p>Accuracy depends on image quality. Clean, high-contrast images of printed or typed text routinely achieve 95–99% character accuracy. Handwritten text and low-quality images are more challenging.</p>
+
+        <div class="footer">&copy; 2026 <a href="../" style="color:inherit;">img2txt</a> &middot; <a href="." style="color:inherit;">Blog</a></div>
+    </div>
+
+    <script>
+        var savedTheme = localStorage.getItem('ocr_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.getElementById('themeToggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('ocr_theme', next);
+            this.textContent = next === 'dark' ? '☀️' : '🌙';
+        });
+    </script>
+</body>
+</html>
