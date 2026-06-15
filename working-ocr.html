@@ -28,7 +28,6 @@
             --shadow: rgba(0,0,0,0.3);
             --bg-option: #f8f9ff;
             --bg-history: #f8f9ff;
-            --text-link: #667eea;
             --bg-success: #e8f5e9;
             --text-success: #2e7d32;
         }
@@ -52,7 +51,6 @@
             --shadow: rgba(0,0,0,0.5);
             --bg-option: #12122a;
             --bg-history: #12122a;
-            --text-link: #90caf9;
             --bg-success: #1b3a1b;
             --text-success: #66bb6a;
         }
@@ -74,7 +72,7 @@
             border-radius: 16px;
             box-shadow: 0 20px 60px var(--shadow);
             padding: 40px;
-            transition: background 0.3s, box-shadow 0.3s;
+            transition: background 0.3s;
         }
 
         .header-row {
@@ -106,7 +104,7 @@
 
         .upload-area {
             border: 3px dashed var(--border-upload); border-radius: 12px; padding: 35px;
-            text-align: center; cursor: pointer; transition: all 0.3s ease;
+            text-align: center; cursor: pointer; transition: border-color 0.3s, background 0.3s;
             background: var(--bg-upload); margin-bottom: 15px;
         }
         .upload-area:hover, .upload-area.dragover { border-color: var(--border-upload-hover); background: var(--bg-upload-hover); }

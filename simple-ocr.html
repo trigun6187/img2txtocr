@@ -22,8 +22,6 @@
             --text-badge: #1967d2;
             --border-section: #e0e0e0;
             --shadow: rgba(0,0,0,0.3);
-            --bg-option: #f8f9ff;
-            --bg-history: #f8f9ff;
             --bg-success: #e8f5e9;
             --text-success: #2e7d32;
         }
@@ -45,8 +43,6 @@
             --text-badge: #90caf9;
             --border-section: #2a2a4a;
             --shadow: rgba(0,0,0,0.5);
-            --bg-option: #12122a;
-            --bg-history: #12122a;
             --bg-success: #1b3a1b;
             --text-success: #66bb6a;
         }
@@ -68,7 +64,7 @@
             border-radius: 16px;
             box-shadow: 0 20px 60px var(--shadow);
             padding: 40px;
-            transition: background 0.3s, box-shadow 0.3s;
+            transition: background 0.3s;
         }
 
         .header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 8px; }
@@ -83,7 +79,7 @@
 
         #fileInput { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; opacity: 0; }
 
-        .upload-area { border: 3px dashed var(--border-upload); border-radius: 12px; padding: 35px; text-align: center; cursor: pointer; transition: all 0.3s ease; background: var(--bg-upload); margin-bottom: 15px; }
+        .upload-area { border: 3px dashed var(--border-upload); border-radius: 12px; padding: 35px; text-align: center; cursor: pointer; transition: border-color 0.3s, background 0.3s; background: var(--bg-upload); margin-bottom: 15px; }
         .upload-area:hover, .upload-area.dragover { border-color: var(--border-upload-hover); background: var(--bg-upload-hover); }
         .upload-area:focus-visible { outline: 3px solid var(--border-upload-hover); outline-offset: 2px; }
 
