@@ -360,25 +360,21 @@
 
         // ---- Wait for Tesseract ----
         const waitForTesseract = new Promise(function(resolve, reject) {
-            function check() {
+            if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') {
+                resolve(Tesseract);
+                return;
+            }
+            var attempts = 0;
+            (function poll() {
+                attempts++;
                 if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') {
                     resolve(Tesseract);
-                    return;
+                } else if (attempts >= 20) {
+                    reject(new Error('Failed to load OCR engine. Check your internet and refresh.'));
+                } else {
+                    setTimeout(poll, 1000);
                 }
-                let attempts = 0;
-                function poll() {
-                    attempts++;
-                    if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') {
-                        resolve(Tesseract);
-                    } else if (attempts >= 20) {
-                        reject(new Error('Failed to load OCR engine. Check your internet and refresh.'));
-                    } else {
-                        setTimeout(poll, 1000);
-                    }
-                }
-                setTimeout(poll, 500);
-            }
-            check();
+            })();
         });
 
         // ---- Pre-create worker on page load ----
@@ -522,8 +518,7 @@
                 text.textContent = 'PDF selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
             } else {
                 icon.textContent = '🖼️';
-                var ext = file.name.split('.').pop().toUpperCase();
-                text.textContent = ext + ' image: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+                text.textContent = file.name.split('.').pop().toUpperCase() + ' image: ' + file.name + ' (' + formatFileSize(file.size) + ')';
             }
 
             document.getElementById('resultsArea').style.display = 'none';
@@ -581,12 +576,7 @@
         }
 
         function preprocessImage(file) {
-            return new Promise(function(resolve, reject) {
-                if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-                    resolve(file);
-                    return;
-                }
-
+            return new Promise(function(resolve) {
                 var autoMode = document.getElementById('optAuto').checked;
                 var grayscale = document.getElementById('optGrayscale').checked;
                 var brightness = parseInt(document.getElementById('optBrightness').value);
@@ -739,7 +729,7 @@
                 updateStats();
                 trackEvent('extraction_complete', {
                     language: lang,
-                    confidence: Math.round((document.getElementById('confidenceBadge').textContent.match(/\d+/) || [0])[0]),
+                    confidence: Math.round((confidenceBadge.textContent.match(/\d+/) || [0])[0]),
                     char_count: extractedText.trim().replace(/\s/g, '').length
                 });
                 updateShareLinks(extractedText);
@@ -811,9 +801,10 @@
 
         function updateStats() {
             var text = extractedText || document.getElementById('textOutput').value;
+            var trimmed = text.trim();
             var charCount = text.replace(/\s/g, '').length;
-            var wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-            var lineCount = text.trim() === '' ? 0 : text.split('\n').filter(function(l) { return l.trim(); }).length;
+            var wordCount = trimmed === '' ? 0 : trimmed.split(/\s+/).length;
+            var lineCount = trimmed === '' ? 0 : text.split('\n').filter(function(l) { return l.trim(); }).length;
 
             document.getElementById('charCount').textContent = charCount.toLocaleString();
             document.getElementById('wordCount').textContent = wordCount.toLocaleString();
