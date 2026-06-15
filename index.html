@@ -516,6 +516,40 @@
             white-space: nowrap;
         }
 
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            padding: 20px;
+        }
+        .modal-overlay.open { opacity: 1; visibility: visible; }
+        .modal-box {
+            background: var(--bg-container); border-radius: 16px;
+            max-width: 520px; width: 100%; max-height: 80vh;
+            padding: 32px; position: relative;
+            box-shadow: 0 20px 60px var(--shadow);
+            overflow-y: auto; transition: background 0.3s;
+        }
+        .modal-box h2 { color: var(--text-primary); font-size: 1.3rem; margin-bottom: 16px; }
+        .modal-box p, .modal-box li {
+            color: var(--text-secondary); font-size: 0.88rem; line-height: 1.65; margin-bottom: 10px;
+        }
+        .modal-box ul { padding-left: 18px; margin-bottom: 10px; }
+        .modal-box .btn-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .modal-box .btn-accept {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff; border: none; padding: 10px 28px; border-radius: 8px;
+            font-size: 0.95rem; cursor: pointer; transition: opacity 0.2s;
+        }
+        .modal-box .btn-accept:hover { opacity: 0.9; }
+        .modal-box .btn-decline {
+            background: var(--bg-input); color: var(--text-primary); border: none;
+            padding: 10px 28px; border-radius: 8px; font-size: 0.95rem; cursor: pointer; transition: opacity 0.2s;
+        }
+        .modal-box .btn-decline:hover { opacity: 0.8; }
+        .modal-box a { color: #667eea; }
+
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 20px; }
@@ -680,6 +714,87 @@
         const MAX_PDF_SIZE = 50 * 1024 * 1024;
         const HISTORY_KEY = 'ocr_history';
 
+        // ---- Google Analytics 4 (opt-in, GDPR-compliant) ----
+        // Replace 'G-0000000000' below with your actual GA4 measurement ID
+        var GA_MEASUREMENT_ID = 'G-0000000000';
+        var gaConsent = localStorage.getItem('ga_consent');
+        var gaInitialized = false;
+
+        function initGA() {
+            if (gaInitialized) return;
+            gaInitialized = true;
+            var s = document.createElement('script');
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+            s.async = true;
+            document.head.appendChild(s);
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', GA_MEASUREMENT_ID, {
+                cookie_flags: 'max-age=31536000;secure;samesite=lax',
+                anonymize_ip: true
+            });
+            trackEvent('consent_granted');
+            trackTiming();
+        }
+
+        function trackEvent(action, params) {
+            if (typeof gtag === 'function') {
+                gtag('event', action, params || {});
+            }
+        }
+
+        function trackTiming() {
+            var start = Date.now();
+            var intervals = [30, 60, 120, 300];
+            intervals.forEach(function(sec) {
+                setTimeout(function() {
+                    if (document.visibilityState !== 'hidden') {
+                        trackEvent('time_on_page', { seconds: sec });
+                    }
+                }, sec * 1000);
+            });
+        }
+
+        // Privacy modal
+        var privacyModal = document.getElementById('privacyModal');
+        var privacyLink = document.getElementById('privacyLink');
+
+        function openPrivacyModal() {
+            privacyModal.classList.add('open');
+        }
+
+        function closePrivacyModal() {
+            privacyModal.classList.remove('open');
+        }
+
+        if (gaConsent === null) {
+            openPrivacyModal();
+        } else if (gaConsent === 'accepted') {
+            initGA();
+        }
+
+        document.getElementById('gaAccept').addEventListener('click', function() {
+            localStorage.setItem('ga_consent', 'accepted');
+            closePrivacyModal();
+            initGA();
+        });
+
+        document.getElementById('gaDecline').addEventListener('click', function() {
+            localStorage.setItem('ga_consent', 'declined');
+            closePrivacyModal();
+        });
+
+        privacyLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            openPrivacyModal();
+        });
+
+        privacyModal.addEventListener('click', function(e) {
+            if (e.target === privacyModal) closePrivacyModal();
+        });
+
         // ---- Theme ----
         const themeToggle = document.getElementById('themeToggle');
         const savedTheme = localStorage.getItem('ocr_theme') || 'light';
@@ -693,6 +808,7 @@
             localStorage.setItem('ocr_theme', next);
             themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
             document.getElementById('themeColor').content = next === 'dark' ? '#1a1a2e' : '#667eea';
+            trackEvent('theme_toggle', { theme: next });
         });
 
         // ---- Options Accordion ----
@@ -887,6 +1003,10 @@
             }
 
             currentFile = file;
+            trackEvent('file_upload', {
+                file_type: isPDF ? 'pdf' : 'image',
+                file_size: file.size > 1048576 ? 'large' : (file.size > 102400 ? 'medium' : 'small')
+            });
             var icon = document.querySelector('.upload-icon');
             var text = document.querySelector('.upload-text');
 
@@ -1054,6 +1174,7 @@
 
             extractBtn.disabled = true;
             var lang = document.getElementById('languageSelect').value;
+            trackEvent('extraction_start', { language: lang });
 
             try {
                 if (!worker || lang !== workerLang) {
@@ -1110,12 +1231,18 @@
                 resultsArea.style.display = 'block';
                 document.getElementById('textOutput').value = extractedText;
                 updateStats();
+                trackEvent('extraction_complete', {
+                    language: lang,
+                    confidence: Math.round((document.getElementById('confidenceBadge').textContent.match(/\d+/) || [0])[0]),
+                    char_count: extractedText.trim().replace(/\s/g, '').length
+                });
                 updateShareLinks(extractedText);
                 saveToHistory(extractedText, currentFile.name);
 
             } catch (error) {
                 loading.style.display = 'none';
                 showError('OCR failed: ' + (error.message || 'Could not extract text from this file.'));
+                trackEvent('extraction_error', { error: (error.message || 'unknown').substring(0, 200) });
             } finally {
                 extractBtn.disabled = false;
                 isProcessing = false;
@@ -1211,6 +1338,14 @@
             document.getElementById('shareSection').classList.add('visible');
         }
 
+        // Share click tracking
+        document.getElementById('shareSection').addEventListener('click', function(e) {
+            var target = e.target.closest('a');
+            if (!target) return;
+            var platform = target.id.replace('share', '').toLowerCase();
+            trackEvent('share_click', { platform: platform });
+        });
+
         function showError(message) {
             var errorDiv = document.getElementById('errorMessage');
             errorDiv.textContent = message;
@@ -1229,6 +1364,7 @@
             textOutput.setSelectionRange(0, 999999);
             try {
                 document.execCommand('copy');
+                trackEvent('copy_text', { char_count: textOutput.value.trim().replace(/\s/g, '').length });
                 var btn = this;
                 var original = btn.textContent;
                 btn.textContent = 'Copied!';
@@ -1250,6 +1386,7 @@
                 showError('No text to download. Please extract text first.');
                 return;
             }
+            trackEvent('download_text', { char_count: textOutput.value.trim().replace(/\s/g, '').length });
             var blob = new Blob([textOutput.value], { type: 'text/plain;charset=utf-8' });
             var url = URL.createObjectURL(blob);
             this.href = url;
@@ -1323,13 +1460,31 @@
         renderHistory();
     </script>
     <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">
-        v1.5 &middot; <a href="blog/" style="color:inherit;">Blog</a> &middot; <a href="https://github.com/trigun6187/img2txtocr" target="_blank" rel="noopener" style="color:inherit;">GitHub</a> &middot; img2txt
+        v1.5 &middot; <a href="blog/" style="color:inherit;">Blog</a> &middot; <a href="#" id="privacyLink" style="color:inherit;">Privacy</a> &middot; <a href="https://github.com/trigun6187/img2txtocr" target="_blank" rel="noopener" style="color:inherit;">GitHub</a> &middot; img2txt
         <br><span style="display: inline-flex; gap: 10px; margin-top: 8px;">
             <a href="https://twitter.com/intent/tweet?text=Free%20online%20OCR%20tool%20%E2%80%94%20extract%20text%20from%20images%20and%20PDFs%20without%20signup%2C%20no%20uploads%2C%20100%25%20private.&url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on X">X</a>
             <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on LinkedIn">LinkedIn</a>
             <a href="https://www.reddit.com/submit?title=Free%20Online%20OCR%20Tool%20%E2%80%94%20Image%20to%20Text%20Converter&url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on Reddit">Reddit</a>
             <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on Facebook">Facebook</a>
         </span>
+    </div>
+
+    <div class="modal-overlay" id="privacyModal">
+        <div class="modal-box" role="dialog" aria-labelledby="privacyTitle" aria-modal="true">
+            <h2 id="privacyTitle">Privacy Policy</h2>
+            <p>Your privacy matters to us. Here is what you should know about data collection on this site.</p>
+            <ul>
+                <li><strong>Google Analytics 4</strong> is used to understand how visitors use the tool. It collects anonymised data such as pages visited, time spent, browser type, and approximate location (city-level). No personally identifiable information (name, email, address) is collected.</li>
+                <li><strong>No file uploads.</strong> All images and PDFs you process are handled entirely in your browser. They are never uploaded, stored, or transmitted to any server.</li>
+                <li><strong>Local storage</strong> is used to remember your theme preference (dark/light mode), extraction history (last 10 items), and analytics consent choice. This data stays on your device.</li>
+                <li><strong>Cookies</strong> are set by Google Analytics for tracking purposes. You can learn more about how Google uses data at <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google's partner site policy</a>.</li>
+            </ul>
+            <p>By clicking "Accept", you consent to the use of Google Analytics for anonymous usage measurement. You can withdraw consent at any time by clearing your browser's local storage.</p>
+            <div class="btn-row">
+                <button class="btn-accept" id="gaAccept">Accept</button>
+                <button class="btn-decline" id="gaDecline">Decline</button>
+            </div>
+        </div>
     </div>
 </body>
 </html>
