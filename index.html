@@ -60,8 +60,6 @@
     <link rel="sitemap" type="application/xml" title="Sitemap" href="sitemap.xml">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" crossorigin="anonymous">
     <link rel="preload" as="image" href="icon.svg" type="image/svg+xml">
     <link rel="manifest" href="manifest.json">
@@ -434,6 +432,8 @@
         // ---- File upload ----
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
+        const uploadIcon = document.querySelector('.upload-icon');
+        const uploadText = document.querySelector('.upload-text');
 
         dropZone.addEventListener('click', function() { fileInput.click(); });
 
@@ -470,8 +470,8 @@
         fileInput.addEventListener('change', function(e) {
             if (e.target.files && e.target.files.length > 0) {
                 handleFileSelect(e.target.files[0]);
+                e.target.value = '';
             }
-            e.target.value = '';
         });
 
         // ---- File handling ----
@@ -510,15 +510,13 @@
                 file_type: isPDF ? 'pdf' : 'image',
                 file_size: file.size > 1048576 ? 'large' : (file.size > 102400 ? 'medium' : 'small')
             });
-            var icon = document.querySelector('.upload-icon');
-            var text = document.querySelector('.upload-text');
 
             if (isPDF) {
-                icon.textContent = '📄';
-                text.textContent = 'PDF selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+                uploadIcon.textContent = '📄';
+                uploadText.textContent = 'PDF selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
             } else {
-                icon.textContent = '🖼️';
-                text.textContent = file.name.split('.').pop().toUpperCase() + ' image: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+                uploadIcon.textContent = '🖼️';
+                uploadText.textContent = file.name.split('.').pop().toUpperCase() + ' image: ' + file.name + ' (' + formatFileSize(file.size) + ')';
             }
 
             document.getElementById('resultsArea').style.display = 'none';
@@ -527,10 +525,8 @@
 
         function resetUploadUI() {
             currentFile = null;
-            var icon = document.querySelector('.upload-icon');
-            var text = document.querySelector('.upload-text');
-            icon.textContent = '📁';
-            text.textContent = 'Drag & drop image or PDF here, or click to select';
+            uploadIcon.textContent = '📁';
+            uploadText.textContent = 'Drag & drop image or PDF here, or click to select';
             document.getElementById('resultsArea').style.display = 'none';
         }
 
@@ -812,8 +808,9 @@
         }
 
         function updateShareLinks(text) {
+            var trimmed = text.trim();
             var baseUrl = 'https://trigun6187.github.io/img2txtocr/';
-            var preview = text.trim().substring(0, 120) + (text.trim().length > 120 ? '...' : '');
+            var preview = trimmed.substring(0, 120) + (trimmed.length > 120 ? '...' : '');
             var msg = 'Extract text from images and PDFs for free \u2014 no signup, no uploads, 100% private.';
             var shareText = preview ? preview + '\n\n' + msg : msg;
             var utm = 'utm_source=social&utm_medium=share&utm_campaign=promo';
