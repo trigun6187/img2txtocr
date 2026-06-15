@@ -450,6 +450,21 @@
 
         .action-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
 
+        .share-section { margin-top: 16px; display: none; }
+        .share-section.visible { display: block; }
+        .share-label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px; transition: color 0.3s; }
+        .share-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-share {
+            padding: 8px 14px; font-size: 0.84rem; border: none; border-radius: 8px;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+            transition: opacity 0.2s; color: #fff; text-decoration: none; font-weight: 500;
+        }
+        .btn-share:hover { opacity: 0.85; }
+        .btn-share-twitter { background: #1da1f2; }
+        .btn-share-linkedin { background: #0a66c2; }
+        .btn-share-reddit { background: #ff4500; }
+        .btn-share-facebook { background: #1877f2; }
+
         .error-message {
             background: var(--bg-error);
             color: var(--text-error);
@@ -620,6 +635,16 @@
             </div>
 
             <textarea id="textOutput" placeholder="Extracted text will appear here..." aria-label="Extracted text output"></textarea>
+
+            <div class="share-section" id="shareSection">
+                <div class="share-label">Share your results</div>
+                <div class="share-buttons">
+                    <a class="btn-share btn-share-twitter" id="shareTwitter" href="#" target="_blank" rel="noopener" aria-label="Share on X (Twitter)">&#120143; X</a>
+                    <a class="btn-share btn-share-linkedin" id="shareLinkedin" href="#" target="_blank" rel="noopener" aria-label="Share on LinkedIn">in LinkedIn</a>
+                    <a class="btn-share btn-share-reddit" id="shareReddit" href="#" target="_blank" rel="noopener" aria-label="Share on Reddit">&#9677; Reddit</a>
+                    <a class="btn-share btn-share-facebook" id="shareFacebook" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook">f Facebook</a>
+                </div>
+            </div>
         </div>
 
         <div class="error-message" id="errorMessage" role="alert"></div>
@@ -783,6 +808,7 @@
         document.getElementById('clearBtn').addEventListener('click', function() {
             resetUploadUI();
             document.getElementById('resultsArea').style.display = 'none';
+            document.getElementById('shareSection').classList.remove('visible');
             document.getElementById('errorMessage').style.display = 'none';
         });
 
@@ -1084,6 +1110,7 @@
                 resultsArea.style.display = 'block';
                 document.getElementById('textOutput').value = extractedText;
                 updateStats();
+                updateShareLinks(extractedText);
                 saveToHistory(extractedText, currentFile.name);
 
             } catch (error) {
@@ -1158,6 +1185,30 @@
             document.getElementById('charCount').textContent = charCount.toLocaleString();
             document.getElementById('wordCount').textContent = wordCount.toLocaleString();
             document.getElementById('lineCount').textContent = lineCount.toLocaleString();
+        }
+
+        function updateShareLinks(text) {
+            var baseUrl = 'https://trigun6187.github.io/img2txtocr/';
+            var preview = text.trim().substring(0, 120) + (text.trim().length > 120 ? '...' : '');
+            var msg = 'Extract text from images and PDFs for free \u2014 no signup, no uploads, 100% private.';
+            var shareText = preview ? preview + '\n\n' + msg : msg;
+            var utm = 'utm_source=social&utm_medium=share&utm_campaign=promo';
+            var shareUrl = baseUrl + '?' + utm;
+            var imgUrl = baseUrl + 'icon.svg';
+
+            document.getElementById('shareTwitter').href =
+                'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) +
+                '&url=' + encodeURIComponent(shareUrl);
+            document.getElementById('shareLinkedin').href =
+                'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(shareUrl);
+            document.getElementById('shareReddit').href =
+                'https://www.reddit.com/submit?title=' + encodeURIComponent('Free Online OCR Tool \u2014 Image to Text Converter') +
+                '&url=' + encodeURIComponent(shareUrl);
+            document.getElementById('shareFacebook').href =
+                'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl) +
+                '&quote=' + encodeURIComponent(msg);
+
+            document.getElementById('shareSection').classList.add('visible');
         }
 
         function showError(message) {
@@ -1256,6 +1307,7 @@
                     document.getElementById('resultsArea').style.display = 'block';
                     document.getElementById('errorMessage').style.display = 'none';
                     updateStats();
+                    updateShareLinks(item.fullText);
                 });
 
                 list.appendChild(div);
@@ -1270,6 +1322,14 @@
 
         renderHistory();
     </script>
-    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">v1.5 &middot; <a href="blog/" style="color:inherit;">Blog</a> &middot; <a href="https://github.com/trigun6187/img2txtocr" target="_blank" rel="noopener" style="color:inherit;">GitHub</a> &middot; img2txt</div>
+    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">
+        v1.5 &middot; <a href="blog/" style="color:inherit;">Blog</a> &middot; <a href="https://github.com/trigun6187/img2txtocr" target="_blank" rel="noopener" style="color:inherit;">GitHub</a> &middot; img2txt
+        <br><span style="display: inline-flex; gap: 10px; margin-top: 8px;">
+            <a href="https://twitter.com/intent/tweet?text=Free%20online%20OCR%20tool%20%E2%80%94%20extract%20text%20from%20images%20and%20PDFs%20without%20signup%2C%20no%20uploads%2C%20100%25%20private.&url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on X">X</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on LinkedIn">LinkedIn</a>
+            <a href="https://www.reddit.com/submit?title=Free%20Online%20OCR%20Tool%20%E2%80%94%20Image%20to%20Text%20Converter&url=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on Reddit">Reddit</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Ftrigun6187.github.io%2Fimg2txtocr%2F%3Futm_source%3Dsocial%26utm_medium%3Dfooter%26utm_campaign%3Dpromo" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;" aria-label="Share tool on Facebook">Facebook</a>
+        </span>
+    </div>
 </body>
 </html>
