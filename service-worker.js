@@ -1,4 +1,4 @@
-const CACHE = 'ocr-tool-v1';
+const CACHE = 'ocr-tool-v2';
 const URLS = [
   '/img2txtocr/',
   '/img2txtocr/index.html',
