@@ -524,7 +524,7 @@
             <span class="feature-badge">Instant Processing</span>
             <span class="feature-badge">Private &amp; Secure</span>
             <span class="feature-badge">100+ Languages</span>
-            <span class="feature-badge">Works Offline</span>
+            <span class="feature-badge">No Sign-Up</span>
         </div>
 
         <input type="file" id="fileInput" accept="image/*,.pdf">
@@ -1051,18 +1051,15 @@
                     loadingText.textContent = 'Preprocessing image...';
 
                     var processedFile = await preprocessImage(currentFile);
-                    var recognizeOptions = {};
-                    recognizeOptions.psm = parseInt(document.getElementById('optLayout').value);
-
-                    if (autoRotate) {
-                        recognizeOptions.rotateAuto = true;
-                    }
+                    var opts = {};
+                    if (autoRotate) opts.rotateAuto = true;
+                    await worker.setParameters({ tessedit_pageseg_mode: parseInt(document.getElementById('optLayout').value) });
 
                     if (!document.getElementById('optAuto').checked) {
                         loadingText.textContent = 'Extracting text...';
                     }
 
-                    var result = await worker.recognize(processedFile, {}, recognizeOptions);
+                    var result = await worker.recognize(processedFile, opts);
 
                     if (result.data.confidence) {
                         var conf = Math.round(result.data.confidence);
@@ -1110,8 +1107,10 @@
             var pdf = await pdfJsLib.getDocument({ data: arrayBuffer }).promise;
             var numPages = pdf.numPages;
             var allTexts = [];
-            var opts = { psm: parseInt(document.getElementById('optLayout').value) };
-            if (autoRotate) opts.rotateAuto = true;
+            var psmVal = parseInt(document.getElementById('optLayout').value);
+            var rotateOpts = {};
+            if (autoRotate) rotateOpts.rotateAuto = true;
+            await worker.setParameters({ tessedit_pageseg_mode: psmVal });
 
             for (var i = 1; i <= numPages; i++) {
                 loadingText.textContent = 'Processing page ' + i + ' of ' + numPages + '...';
@@ -1126,7 +1125,7 @@
 
                 await page.render({ canvasContext: ctx, viewport: viewport }).promise;
                 var imageData = canvas.toDataURL('image/png');
-                var result = await worker.recognize(imageData, {}, opts);
+                var result = await worker.recognize(imageData, rotateOpts);
                 allTexts.push(result.data.text);
             }
 

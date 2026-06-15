@@ -155,7 +155,7 @@
             <li><strong>Select the language</strong> &mdash; English is the default. Change it if your screenshot contains other languages.</li>
             <li><strong>Enable Auto Enhance</strong> &mdash; Leave this on (it is checked by default). It automatically adjusts brightness and contrast for optimal OCR.</li>
             <li><strong>Choose a layout</strong> &mdash; "Auto" works for most screenshots. Use "Single Column" for articles or long-form text.</li>
-            <li><strong>Click "Extract Text"</strong> &mdash; The progress bar shows the worker initializing and processing the image.</li>
+            <li><strong>Click "Extract Text"</strong> &mdash; A loading spinner shows the worker initializing and processing the image.</li>
             <li><strong>Copy or download</strong> &mdash; Once the confidence badge appears, copy the text to your clipboard or download it as a .txt file.</li>
         </ol>
 
@@ -230,13 +230,13 @@
                 </thead>
                 <tbody>
                     <tr><td>Platform</td><td>Web (PWA)</td><td>Android, iOS</td><td>Android, iOS</td><td>Android, iOS</td></tr>
-                    <tr><td>Install required</td><td class="tip" style="background:var(--bg-tip);border:0;padding:10px 12px;">No (browser)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-                    <tr><td>Offline capable</td><td class="tip" style="background:var(--bg-tip);border:0;padding:10px 12px;">Yes (PWA)</td><td>Partial</td><td>No</td><td>No</td></tr>
+                    <tr><td>Install required</td><td>No (browser)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                    <tr><td>Offline capable</td><td>Shell only</td><td>Partial</td><td>No</td><td>No</td></tr>
                     <tr><td>Camera capture</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                     <tr><td>No sign-up</td><td>Yes</td><td>Google account</td><td>Microsoft account</td><td>Adobe account</td></tr>
                     <tr><td>No server upload</td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr>
                     <tr><td>PDF output</td><td>.txt only</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-                    <tr><td>Language support</td><td>20+</td><td>100+</td><td>30+</td><td>20+</td></tr>
+                    <tr><td>Language support</td><td>100+</td><td>100+</td><td>30+</td><td>20+</td></tr>
                     <tr><td>Dark mode</td><td>Yes</td><td>System</td><td>System</td><td>No</td></tr>
                     <tr><td>Cost</td><td>Free</td><td>Free</td><td>Free</td><td>Free (limited)</td></tr>
                 </tbody>
@@ -247,12 +247,12 @@
         <p>Google Lens, Microsoft Lens, and Adobe Scan all upload your photos to cloud servers for OCR processing. img2txt runs entirely in the browser on-device &mdash; even on mobile Safari and Chrome. When you capture a photo with the built-in camera feature (<code>capture="environment"</code>), the image never leaves your phone.</p>
 
         <div class="tip">
-            <strong>PWA install:</strong> On Android, tap "Add to Home Screen" in Chrome to install img2txt as a standalone app. It works offline and uses the phone camera directly. On iOS, use Share &rarr; Add to Home Screen in Safari.
+            <strong>PWA install:</strong> On Android, tap "Add to Home Screen" in Chrome to install img2txt as a standalone app (offline-capable shell, OCR requires network for Tesseract engine). On iOS, use Share &rarr; Add to Home Screen in Safari.
         </div>
 
         <h3>When to Use Each Tool</h3>
         <ul>
-            <li><strong>img2txt</strong> &mdash; When privacy matters, you need offline support, or you just want a quick text copy without creating yet another account.</li>
+            <li><strong>img2txt</strong> &mdash; When privacy matters, you want client-side processing, or you just want a quick text copy without creating another account.</li>
             <li><strong>Google Lens</strong> &mdash; Best for real-time augmented reality translation and smart text selection in the camera viewfinder.</li>
             <li><strong>Microsoft Lens</strong> &mdash; Great for digitizing whiteboards and scanning to PDF, especially if you use Microsoft 365.</li>
             <li><strong>Adobe Scan</strong> &mdash; Excellent for high-quality document scanning with auto-cropping and enhancement, but requires an Adobe account.</li>
@@ -286,7 +286,7 @@
                     <tr><td>Handwriting support</td><td>Limited</td><td>Good</td><td>Good</td><td>Good</td></tr>
                     <tr><td>Form / table extraction</td><td>No</td><td>Yes (Form Parser)</td><td>Yes (tables)</td><td>Yes</td></tr>
                     <tr><td>Language support</td><td>100+ via Tesseract</td><td>200+</td><td>20+</td><td>160+</td></tr>
-                    <tr><td>Latency (no network)</td><td>Instant (local)</td><td>1-3s (network dependant)</td><td>1-3s</td><td>1-3s</td></tr>
+                    <tr><td>Latency</td><td>1-5s (local CPU)</td><td>1-3s (server)</td><td>1-3s (server)</td><td>1-3s (server)</td></tr>
                     <tr><td>API key required</td><td>No</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                     <tr><td>Rate limits</td><td>None</td><td>1000/min (tiered)</td><td>Depends on quota</td><td>20-50 req/min</td></tr>
                 </tbody>
@@ -297,7 +297,7 @@
         <ul>
             <li><strong>Privacy is critical</strong> &mdash; Medical records, legal documents, or proprietary data that cannot be uploaded to a third party.</li>
             <li><strong>Budget is zero</strong> &mdash; Tesseract.js is completely free with no usage limits.</li>
-            <li><strong>Offline use</strong> &mdash; Once the language data is cached, Tesseract.js works without any internet connection.</li>
+            <li><strong>No hidden costs</strong> &mdash; Tesseract.js is free, no API keys, no usage tiers, no paid upgrades.</li>
             <li><strong>Rapid prototyping</strong> &mdash; No API keys, no SDK setup, no authentication.</li>
         </ul>
 
@@ -336,7 +336,7 @@
             <li><strong>Tap the upload area</strong> &mdash; On mobile, this opens a file picker with a "Take Photo" option (uses the rear camera by default).</li>
             <li><strong>Take a photo of the text</strong> &mdash; Hold the phone steady. Ensure the text is flat, evenly lit, and fills most of the frame.</li>
             <li><strong>Adjust settings</strong> &mdash; Select the language. Auto Enhance is on by default &mdash; it corrects lighting, contrast, and rotation.</li>
-            <li><strong>Tap "Extract Text"</strong> &mdash; Processing happens on-device. The progress bar keeps you informed.</li>
+            <li><strong>Tap "Extract Text"</strong> &mdash; Processing happens on-device. The loading spinner shows progress.</li>
             <li><strong>Copy text</strong> &mdash; Tap the copy button to paste the text into any app.</li>
         </ol>
 
