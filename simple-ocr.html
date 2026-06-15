@@ -232,13 +232,13 @@
         var tesseractReady = false;
 
         function checkTesseract() {
-            if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+            if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') {
                 TesseractLib = Tesseract; tesseractReady = true;
                 initWorker('eng'); return;
             }
             var a = 0;
             (function poll() { a++;
-                if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') { TesseractLib = Tesseract; tesseractReady = true; initWorker('eng'); }
+                if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') { TesseractLib = Tesseract; tesseractReady = true; initWorker('eng'); }
                 else if (a < 20) setTimeout(poll, 1000);
             })();
         }
@@ -248,7 +248,7 @@
             if (worker) { try { worker.terminate(); } catch(_) {} worker = null; }
             if (!TesseractLib) return;
             workerLang = lang;
-            TesseractLib.Tesseract.createWorker(lang).then(function(w) { worker = w; workerLang = lang; }).catch(function() {});
+            TesseractLib.createWorker(lang).then(function(w) { worker = w; workerLang = lang; }).catch(function() {});
         }
 
         document.getElementById('languageSelect').addEventListener('change', function() {
@@ -425,5 +425,6 @@
             setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
         });
     </script>
+    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">v1.0 &middot; img2txt</div>
 </body>
 </html>

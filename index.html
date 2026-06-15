@@ -626,14 +626,14 @@
         // ---- Wait for Tesseract ----
         const waitForTesseract = new Promise(function(resolve, reject) {
             function check() {
-                if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+                if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') {
                     resolve(Tesseract);
                     return;
                 }
                 let attempts = 0;
                 function poll() {
                     attempts++;
-                    if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+                    if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') {
                         resolve(Tesseract);
                     } else if (attempts >= 20) {
                         reject(new Error('Failed to load OCR engine. Check your internet and refresh.'));
@@ -665,7 +665,7 @@
             }
             if (!TesseractLib) return;
             workerLang = lang;
-            TesseractLib.Tesseract.createWorker(lang).then(function(w) {
+            TesseractLib.createWorker(lang).then(function(w) {
                 worker = w;
                 workerLang = lang;
                 console.log('Worker ready for:', lang);
@@ -1138,5 +1138,6 @@
 
         renderHistory();
     </script>
+    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">v1.0 &middot; img2txt</div>
 </body>
 </html>

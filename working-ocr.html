@@ -348,7 +348,7 @@
         var tesseractReady = false;
 
         function checkTesseract() {
-            if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+            if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') {
                 TesseractLib = Tesseract;
                 tesseractReady = true;
                 initWorker('eng');
@@ -357,7 +357,7 @@
             var attempts = 0;
             function poll() {
                 attempts++;
-                if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+                if (typeof Tesseract !== 'undefined' && typeof Tesseract.createWorker === 'function') {
                     TesseractLib = Tesseract;
                     tesseractReady = true;
                     initWorker('eng');
@@ -373,7 +373,7 @@
             if (worker) { try { worker.terminate(); } catch (_) {} worker = null; }
             if (!TesseractLib) return;
             workerLang = lang;
-            TesseractLib.Tesseract.createWorker(lang).then(function(w) {
+            TesseractLib.createWorker(lang).then(function(w) {
                 worker = w;
                 workerLang = lang;
             }).catch(function() {});
@@ -663,5 +663,6 @@
         function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
         renderHistory();
     </script>
+    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">v1.0 &middot; img2txt</div>
 </body>
 </html>
