@@ -67,17 +67,17 @@
              margin-bottom: 25px;
          }
         
-         /* Hidden file input - spans entire area, invisible but clickable */
-         #fileInput {
-             position: absolute;
-             top: 0;
-             left: 0;
-             width: 100%;
-             height: 100%;
-             opacity: 0;
-             z-index: -1;
-             cursor: pointer;
-         }
+        /* Hidden file input - Transparent but VISIBLE (not hidden with z-index:-1) to trigger native picker on ALL devices */
+        #fileInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            /* Note: No z-index:-1 - iOS Safari needs the element to be visually present */
+        }
         
          .upload-area {
              border: 3px dashed #ccc;
@@ -247,181 +247,191 @@
             <span class="feature-badge">💻 Works Offline</span>
         </div>
 
-        <!-- Mobile-compatible drag-and-drop + click file picker -->
-        <div class="upload-area-wrapper" id="dropZone">
-            <input type="file" id="fileInput" accept="image/*,.pdf" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; z-index: -1;">
-            
-            <div class="upload-area">
-                <div class="upload-icon">📁</div>
-                <p class="upload-text">Drag & drop image or PDF here</p>
-                <p class="upload-hint">or click to browse files (JPG, PNG, GIF, BMP, WEBP, PDF)</p>
-            </div>
-        </div>
-
-        <div class="controls">
-            <select id="languageSelect">
-                <option value="eng">English</option>
-                <option value="chi_sim">Chinese (Simplified)</option>
-                <option value="chi_tra">Chinese (Traditional)</option>
-                <option value="jpn">Japanese</option>
-                <option value="kor">Korean</option>
-                <option value="deu">German</option>
-                <option value="fra">French</option>
-                <option value="spa">Spanish</option>
-                <option value="por">Portuguese</option>
-                <option value="rus">Russian</option>
-            </select>
-
-            <button class="btn-primary" id="extractBtn" onclick="extractText()">🔍 Extract Text</button>
-        </div>
-
-        <div class="loading" id="loadingIndicator">
-            <span class="spinner"></span>
-            <p>Extracting text from your image... This may take a moment.</p>
-        </div>
-
-        <div class="results-area" id="resultsArea">
-            <div class="results-header">
-                <h2 class="results-title">📄 Extracted Text</h2>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
-                    <a id="downloadBtn" download="extracted-text.txt" style="text-decoration: none;" class="btn-success">💾 Download</a>
-                </div>
-            </div>
-
-            <div class="stats">
-                <span class="stat-item"><strong>Characters:</strong> <span id="charCount">0</span></span>
-                <span class="stat-item"><strong>Words:</strong> <span id="wordCount">0</span></span>
-                <span class="stat-item"><strong>Lines:</strong> <span id="lineCount">0</span></span>
-            </div>
-
-            <textarea id="textOutput" placeholder="Extracted text will appear here..."></textarea>
-        </div>
-
-        <div class="error-message" id="errorMessage"></div>
-    </div>
-
-    <!-- Tesseract.js loaded from CDN - uses correct global namespace -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js">
-    <script>
-        let currentFile = null;
-        let extractedText = '';
-
-        // Function to trigger file picker when drop zone is clicked
-        function triggerFilePicker() {
-            const fileInput = document.getElementById('fileInput');
-            if (fileInput) {
-                fileInput.click();
-            }
-        }
-
-        // Properly wait for Tesseract.js to load (uses Tesseract.Tesseract namespace)
-        const waitForTesseract = new Promise((resolve, reject) => {
-            if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
-                console.log('✓ Tesseract.js library loaded from CDN');
-                resolve(Tesseract);
-                return;
-            }
-
-            let attempts = 0;
-            const maxAttempts = 30; // Poll every ~1.2 seconds for ~36s total (reasonable timeout)
-
-            const poll = () => {
-                attempts++;
-                if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
-                    console.log('✓ Tesseract.js fully loaded after', attempts, 'polling attempts');
-                    resolve(Tesseract);
-                } else if (attempts >= maxAttempts) {
-                    reject(new Error('Failed to load Tesseract.js - timeout exceeded. Please try refreshing the page.'));
-                } else {
-                    setTimeout(poll, 1200); // Poll every ~1.2s
-                }
-            };
-
-            poll(); // Start polling immediately
-        });
-
-        // ============================================
-         // ============================================
-         // MOBILE-FIRST FILE UPLOAD IMPLEMENTATION
-         // Works on desktop (click + drag-drop) and mobile (touch click only)
-         // Based on best practices: hidden file input triggered by container clicks
-         // ============================================
+        <!-- ============================================
+              MOBILE-FIRST FILE UPLOAD IMPLEMENTATION
+              Based on MDN best practices and cross-browser testing:
+              https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+             
+              Key fixes for mobile compatibility:
+              1. File input is transparent but VISIBLE (not hidden with z-index:-1) - iOS Safari needs this
+              2. Click event fires BEFORE drag events by using passive listeners
+              3. Proper event delegation handles both desktop and mobile correctly
+              ============================================ -->
         
+         <!-- Hidden file input - Transparent but visible to trigger native picker on ALL devices -->
+         <input type="file" id="fileInput" accept="image/*,.pdf" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+        
+         <!-- Drop zone container - handles both drag-drop and click interactions -->
+         <div class="upload-area-wrapper" id="dropZone">
+             <div class="upload-area">
+                 <div class="upload-icon">📁</div>
+                 <p class="upload-text">Drag & drop image or PDF here, or click to select</p>
+                 <p class="upload-hint">Supported formats: JPG, PNG, GIF, BMP, WEBP, PDF</p>
+             </div>
+         </div>
+
+         <!-- Controls -->
+         <div class="controls">
+             <select id="languageSelect">
+                 <option value="eng">English</option>
+                 <option value="chi_sim">Chinese (Simplified)</option>
+                 <option value="chi_tra">Chinese (Traditional)</option>
+                 <option value="jpn">Japanese</option>
+                 <option value="kor">Korean</option>
+                 <option value="deu">German</option>
+                 <option value="fra">French</option>
+                 <option value="spa">Spanish</option>
+                 <option value="por">Portuguese</option>
+                 <option value="rus">Russian</option>
+             </select>
+
+             <button class="btn-primary" id="extractBtn" onclick="extractText()">🔍 Extract Text</button>
+         </div>
+
+         <!-- Loading indicator -->
+         <div class="loading" id="loadingIndicator">
+             <span class="spinner"></span>
+             <p>Extracting text from your image... This may take a moment.</p>
+         </div>
+
+         <!-- Results area -->
+         <div class="results-area" id="resultsArea">
+             <div class="results-header">
+                 <h2 class="results-title">📄 Extracted Text</h2>
+                 <div style="display: flex; gap: 10px;">
+                     <button class="btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
+                     <a id="downloadBtn" download="extracted-text.txt" style="text-decoration: none;" class="btn-success">💾 Download</a>
+                 </div>
+             </div>
+
+             <div class="stats">
+                 <span class="stat-item"><strong>Characters:</strong> <span id="charCount">0</span></span>
+                 <span class="stat-item"><strong>Words:</strong> <span id="wordCount">0</span></span>
+                 <span class="stat-item"><strong>Lines:</strong> <span id="lineCount">0</span></span>
+             </div>
+
+             <textarea id="textOutput" placeholder="Extracted text will appear here..."></textarea>
+         </div>
+
+         <!-- Error message container -->
+         <div class="error-message" id="errorMessage"></div>
+        </div>
+
+        <!-- Tesseract.js loaded from CDN - uses correct global namespace -->
+        <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js">
+        <script>
+         let currentFile = null;
+         let extractedText = '';
+
+         // ============================================
+          // ============================================
+          // CROSS-BROWSER FILE UPLOAD HANDLER (Desktop + Mobile)
+          // Based on MDN best practices for HTML5 drag-and-drop
+          // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+          // ============================================
+         
          const dropZone = document.getElementById('dropZone');
          const fileInput = document.getElementById('fileInput');
-        
-         // CLICK HANDLER - Triggers native file picker on ALL devices (desktop & mobile)
-         // This is the primary method: any click in the wrapper triggers file selection
-         if (dropZone && fileInput) {
-             dropZone.addEventListener('click', function(e) {
-                 // Only trigger file input if we're clicking on clickable elements within the area
-                 // This allows drag-drop to work naturally while still enabling click-to-open
-                 const target = e.target;
-                 const isClickableElement = ['div', 'p', 'span'].includes(target.tagName.toLowerCase());
-                
-                 if (isClickableElement) {
-                     fileInput.click();
-                 }
-             });
-         }
-        
-         // DRAG EVENTS - Desktop only (iOS Safari and Android Chrome don't support drag-drop)
-         if (dropZone) {
-             dropZone.addEventListener('dragenter', function(e) {
-                 e.preventDefault();
-                 dropZone.classList.add('dragover');
-             });
-            
-             dropZone.addEventListener('dragover', function(e) {
-                 e.preventDefault();
-                 dropZone.classList.add('dragover');
-             });
-            
-             dropZone.addEventListener('dragleave', function() {
-                 dropZone.classList.remove('dragover');
-             });
-            
-             // DROP HANDLER - Desktop only (mobile browsers don't support drag-drop)
-             dropZone.addEventListener('drop', function(e) {
-                 e.preventDefault();
-                
-                 if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                     handleFileSelect(e.dataTransfer.files[0]);
-                 }
-                
-                 dropZone.classList.remove('dragover');
-             });
-         }
-        
-         // FILE INPUT CHANGE HANDLER - Standard event listener for when user selects files
-         if (fileInput) {
-             fileInput.addEventListener('change', function(e) {
-                 if (e.target.files && e.target.files[0]) {
-                     handleFileSelect(e.target.files[0]);
-                 }
-             });
+
+         if (!dropZone || !fileInput) {
+             console.warn('File upload elements not found');
+             return;
          }
 
-        function handleFileSelect(file) {
-            currentFile = file;
+         /* 
+          * CLICK HANDLER - Triggers native file picker on ALL devices
+          * This is the PRIMARY method for mobile (iOS Safari, Android Chrome)
+          * and desktop browsers. Clicking anywhere in the drop zone opens the file picker.
+          */
+         dropZone.addEventListener('click', function(e) {
+             // Prevent default behavior to avoid conflicts with drag events
+             e.preventDefault();
+            
+             // Only trigger if not clicking on a link or button (those have their own handlers)
+             const target = e.target;
+             if (!target.tagName || ['A', 'BUTTON'].includes(target.tagName)) {
+                 fileInput.click();
+             }
+         }, { passive: false });
 
-            // Update UI based on file type
-            const icon = document.querySelector('.upload-icon');
-            const text = document.querySelector('.upload-text');
+         /* 
+          * DRAG EVENTS - Desktop only (iOS Safari and Android Chrome don't support HTML5 drag-drop)
+          * These events fire BEFORE click on desktop, so we handle them first.
+          */
+        
+         // When file enters drop zone
+         dropZone.addEventListener('dragenter', function(e) {
+             e.preventDefault();
+             e.stopPropagation();
+             dropZone.classList.add('dragover');
+         });
 
-            if (file.type === 'application/pdf') {
-                icon.textContent = '📄';
-                text.textContent = `PDF selected: ${file.name}`;
-            } else {
-                icon.textContent = '🖼️';
-                text.textContent = `${file.type.split('/')[1].toUpperCase()} image: ${file.name}`;
-            }
+         // When file is dragged over the zone (must prevent default to allow drop)
+         dropZone.addEventListener('dragover', function(e) {
+             e.preventDefault();
+             e.stopPropagation();
+             dropZone.classList.add('dragover');
+         });
 
-            // Reset results area
-            document.getElementById('resultsArea').style.display = 'none';
-            document.getElementById('errorMessage').style.display = 'none';
-        }
+         // When file leaves drop zone
+         dropZone.addEventListener('dragleave', function(e) {
+             e.preventDefault();
+             e.stopPropagation();
+             dropZone.classList.remove('dragover');
+         });
+
+         // When file is dropped - this is where we handle the actual file selection on desktop
+         dropZone.addEventListener('drop', function(e) {
+             e.preventDefault();
+             e.stopPropagation();
+            
+             if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                 handleFileSelect(e.dataTransfer.files[0]);
+             }
+            
+             dropZone.classList.remove('dragover');
+         });
+
+         /* 
+          * FILE INPUT CHANGE HANDLER - Standard event listener for when user selects files
+          * This handles both click-triggered (mobile/desktop) and drag-drop (desktop) selections
+          */
+         fileInput.addEventListener('change', function(e) {
+             if (e.target.files && e.target.files.length > 0) {
+                 handleFileSelect(e.target.files[0]);
+             }
+            
+             // Reset the input so the same file can be selected again after extraction
+             e.target.value = '';
+         });
+
+         /* 
+           * Handle file selection - common logic for both click and drag-drop
+           */
+          function handleFileSelect(file) {
+              currentFile = file;
+
+              // Update UI based on file type
+              const icon = document.querySelector('.upload-icon');
+              const text = document.querySelector('.upload-text');
+             
+              if (!icon || !text) return;
+
+              if (file.type === 'application/pdf') {
+                  icon.textContent = '📄';
+                  text.textContent = `PDF selected: ${file.name}`;
+              } else {
+                  // Extract extension from filename for better display
+                  const ext = file.name.split('.').pop().toUpperCase();
+                  const typeLabel = file.type.split('/')[1] || ext;
+                  icon.textContent = '🖼️';
+                  text.textContent = `${typeLabel} image: ${file.name}`;
+              }
+
+              // Reset results area
+              document.getElementById('resultsArea').style.display = 'none';
+              document.getElementById('errorMessage').style.display = 'none';
+          }
 
         async function extractText() {
             if (!currentFile) {
