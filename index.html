@@ -516,6 +516,15 @@
                     <input type="range" id="optContrast" min="50" max="200" value="100">
                     <span class="value-label" id="contrastVal">100%</span>
                 </div>
+                <div class="option-row">
+                    <label for="optLayout">Layout</label>
+                    <select id="optLayout" style="flex:1;min-width:100px;padding:6px 10px;font-size:0.85rem;">
+                        <option value="3">Auto (default)</option>
+                        <option value="4">Single Column</option>
+                        <option value="6">Single Block</option>
+                        <option value="11">Sparse Text</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -991,6 +1000,7 @@
 
                     var processedFile = await preprocessImage(currentFile);
                     var recognizeOptions = {};
+                    recognizeOptions.psm = parseInt(document.getElementById('optLayout').value);
 
                     if (autoRotate) {
                         recognizeOptions.rotateAuto = true;
@@ -1207,6 +1217,6 @@
 
         renderHistory();
     </script>
-    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">v1.2 &middot; img2txt</div>
+    <div style="text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s;">v1.3 &middot; img2txt</div>
 </body>
 </html>
