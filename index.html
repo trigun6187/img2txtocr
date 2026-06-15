@@ -9,7 +9,7 @@
     <meta property="og:title" content="Free Image to Text Converter - Online OCR Tool">
     <meta property="og:description" content="Convert images and PDFs to editable text instantly. Free online OCR tool with 100+ language support.">
     <meta property="og:type" content="website">
-    <link rel="canonical" href="https://ocr-tool.freedomclaw.com/">
+    <link rel="canonical" href="https://trigun6187.github.io/img2txtocr/">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,44 +61,45 @@
             font-weight: 500;
         }
 
-        .upload-area-wrapper {
-             position: relative;
-             width: 100%;
-             margin-bottom: 25px;
-         }
-        
-        /* Hidden file input - Transparent but VISIBLE (not hidden with z-index:-1) to trigger native picker on ALL devices */
         #fileInput {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
             opacity: 0;
-            cursor: pointer;
-            /* Note: No z-index:-1 - iOS Safari needs the element to be visually present */
         }
-        
-         .upload-area {
-             border: 3px dashed #ccc;
-             border-radius: 12px;
-             padding: 40px;
-             text-align: center;
-             cursor: pointer;
-             transition: all 0.3s ease;
-             background: #fafafa;
-             width: 100%;
-         }
-        
-         .upload-area:hover, .upload-area.dragover {
-             border-color: #667eea;
-             background: #f0f4ff;
-         }
+
+        .upload-area {
+            border: 3px dashed #ccc;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            margin-bottom: 25px;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .upload-area:focus-visible {
+            outline: 3px solid #667eea;
+            outline-offset: 2px;
+        }
 
         .upload-icon {
             font-size: 3rem;
             margin-bottom: 15px;
             color: #ccc;
+            transition: all 0.3s;
         }
 
         .upload-text {
@@ -111,7 +112,7 @@
             font-size: 0.9rem;
             color: #999;
         }
-        
+
         .controls {
             display: flex;
             gap: 15px;
@@ -132,6 +133,11 @@
             min-width: 180px;
         }
 
+        select:focus-visible {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -149,8 +155,7 @@
         }
 
         button:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         .results-area {
             margin-top: 30px;
@@ -164,6 +169,8 @@
             margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 2px solid #eee;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .results-title {
@@ -183,12 +190,9 @@
             resize: vertical;
         }
 
-        textarea:focus { outline: none; border-color: #667eea; }
-
-        .empty-state {
-            text-align: center;
-            color: #999;
-            padding: 40px 20px;
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
         }
 
         .loading {
@@ -227,211 +231,244 @@
             margin-bottom: 15px;
             font-size: 0.9rem;
             color: #666;
+            flex-wrap: wrap;
         }
 
         .stat-item strong {
             color: #333;
             margin-right: 8px;
         }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .file-info {
+            display: none;
+            background: #e8f4fd;
+            color: #1967d2;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔤 Free Image to Text Converter</h1>
-        <p class="subtitle">Convert images and PDFs to editable text instantly - No signup, no API keys, 100% free</p>
+        <h1>Free Image to Text Converter</h1>
+        <p class="subtitle">Convert images and PDFs to editable text instantly &mdash; No signup, no API keys, 100% free</p>
 
         <div class="features">
-            <span class="feature-badge">⚡ Instant Processing</span>
-            <span class="feature-badge">🔒 Private & Secure</span>
-            <span class="feature-badge">🌍 100+ Languages</span>
-            <span class="feature-badge">💻 Works Offline</span>
+            <span class="feature-badge">Instant Processing</span>
+            <span class="feature-badge">Private & Secure</span>
+            <span class="feature-badge">100+ Languages</span>
+            <span class="feature-badge">Works Offline</span>
         </div>
 
-        <!-- ============================================
-              MOBILE-FIRST FILE UPLOAD IMPLEMENTATION
-              Based on MDN best practices and cross-browser testing:
-              https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
-             
-              Key fixes for mobile compatibility:
-              1. File input is transparent but VISIBLE (not hidden with z-index:-1) - iOS Safari needs this
-              2. Click event fires BEFORE drag events by using passive listeners
-              3. Proper event delegation handles both desktop and mobile correctly
-              ============================================ -->
-        
-         <!-- Hidden file input - Transparent but visible to trigger native picker on ALL devices -->
-         <input type="file" id="fileInput" accept="image/*,.pdf" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
-        
-         <!-- Drop zone container - handles both drag-drop and click interactions -->
-         <div class="upload-area-wrapper" id="dropZone">
-             <div class="upload-area">
-                 <div class="upload-icon">📁</div>
-                 <p class="upload-text">Drag & drop image or PDF here, or click to select</p>
-                 <p class="upload-hint">Supported formats: JPG, PNG, GIF, BMP, WEBP, PDF</p>
-             </div>
-         </div>
+        <input type="file" id="fileInput" accept="image/*,.pdf">
 
-         <!-- Controls -->
-         <div class="controls">
-             <select id="languageSelect">
-                 <option value="eng">English</option>
-                 <option value="chi_sim">Chinese (Simplified)</option>
-                 <option value="chi_tra">Chinese (Traditional)</option>
-                 <option value="jpn">Japanese</option>
-                 <option value="kor">Korean</option>
-                 <option value="deu">German</option>
-                 <option value="fra">French</option>
-                 <option value="spa">Spanish</option>
-                 <option value="por">Portuguese</option>
-                 <option value="rus">Russian</option>
-             </select>
+        <div id="fileInfo" class="file-info"></div>
 
-             <button class="btn-primary" id="extractBtn" onclick="extractText()">🔍 Extract Text</button>
-         </div>
-
-         <!-- Loading indicator -->
-         <div class="loading" id="loadingIndicator">
-             <span class="spinner"></span>
-             <p>Extracting text from your image... This may take a moment.</p>
-         </div>
-
-         <!-- Results area -->
-         <div class="results-area" id="resultsArea">
-             <div class="results-header">
-                 <h2 class="results-title">📄 Extracted Text</h2>
-                 <div style="display: flex; gap: 10px;">
-                     <button class="btn-secondary" onclick="copyToClipboard()">📋 Copy</button>
-                     <a id="downloadBtn" download="extracted-text.txt" style="text-decoration: none;" class="btn-success">💾 Download</a>
-                 </div>
-             </div>
-
-             <div class="stats">
-                 <span class="stat-item"><strong>Characters:</strong> <span id="charCount">0</span></span>
-                 <span class="stat-item"><strong>Words:</strong> <span id="wordCount">0</span></span>
-                 <span class="stat-item"><strong>Lines:</strong> <span id="lineCount">0</span></span>
-             </div>
-
-             <textarea id="textOutput" placeholder="Extracted text will appear here..."></textarea>
-         </div>
-
-         <!-- Error message container -->
-         <div class="error-message" id="errorMessage"></div>
+        <div class="upload-area" id="dropZone" role="button" tabindex="0" aria-label="Upload area. Click to browse files or drag and drop an image or PDF here.">
+            <div class="upload-icon" aria-hidden="true">📁</div>
+            <p class="upload-text">Drag &amp; drop image or PDF here, or click to select</p>
+            <p class="upload-hint">Supported formats: JPG, PNG, GIF, BMP, WEBP, PDF</p>
         </div>
 
-        <!-- Tesseract.js loaded from CDN - uses correct global namespace -->
-        <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js">
-        <script>
-         let currentFile = null;
-         let extractedText = '';
+        <div class="controls">
+            <select id="languageSelect" aria-label="Select OCR language">
+                <option value="eng">English</option>
+                <option value="chi_sim">Chinese (Simplified)</option>
+                <option value="chi_tra">Chinese (Traditional)</option>
+                <option value="jpn">Japanese</option>
+                <option value="kor">Korean</option>
+                <option value="deu">German</option>
+                <option value="fra">French</option>
+                <option value="spa">Spanish</option>
+                <option value="por">Portuguese</option>
+                <option value="rus">Russian</option>
+            </select>
 
-         // ============================================
-          // ============================================
-          // CROSS-BROWSER FILE UPLOAD HANDLER (Desktop + Mobile)
-          // Based on MDN best practices for HTML5 drag-and-drop
-          // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
-          // ============================================
-         
-         const dropZone = document.getElementById('dropZone');
-         const fileInput = document.getElementById('fileInput');
+            <button class="btn-primary" id="extractBtn" aria-label="Extract text from the selected image or PDF">Extract Text</button>
+        </div>
 
-         if (!dropZone || !fileInput) {
-             console.warn('File upload elements not found');
-             return;
-         }
+        <div class="loading" id="loadingIndicator" role="status" aria-live="polite">
+            <span class="spinner" aria-hidden="true"></span>
+            <p>Extracting text from your image... This may take a moment.</p>
+        </div>
 
-         /* 
-          * CLICK HANDLER - Triggers native file picker on ALL devices
-          * This is the PRIMARY method for mobile (iOS Safari, Android Chrome)
-          * and desktop browsers. Clicking anywhere in the drop zone opens the file picker.
-          */
-         dropZone.addEventListener('click', function(e) {
-             // Prevent default behavior to avoid conflicts with drag events
-             e.preventDefault();
-            
-             // Only trigger if not clicking on a link or button (those have their own handlers)
-             const target = e.target;
-             if (!target.tagName || ['A', 'BUTTON'].includes(target.tagName)) {
-                 fileInput.click();
-             }
-         }, { passive: false });
+        <div class="results-area" id="resultsArea">
+            <div class="results-header">
+                <h2 class="results-title">Extracted Text</h2>
+                <div class="action-buttons">
+                    <button class="btn-secondary" id="copyBtn" aria-label="Copy extracted text to clipboard">Copy</button>
+                    <a id="downloadBtn" download="extracted-text.txt" href="#" class="btn-success" style="text-decoration: none; padding: 12px 20px; font-size: 1rem; border-radius: 8px; display: inline-block;" aria-label="Download extracted text as TXT file">Download</a>
+                </div>
+            </div>
 
-         /* 
-          * DRAG EVENTS - Desktop only (iOS Safari and Android Chrome don't support HTML5 drag-drop)
-          * These events fire BEFORE click on desktop, so we handle them first.
-          */
-        
-         // When file enters drop zone
-         dropZone.addEventListener('dragenter', function(e) {
-             e.preventDefault();
-             e.stopPropagation();
-             dropZone.classList.add('dragover');
-         });
+            <div class="stats">
+                <span class="stat-item"><strong>Characters:</strong> <span id="charCount">0</span></span>
+                <span class="stat-item"><strong>Words:</strong> <span id="wordCount">0</span></span>
+                <span class="stat-item"><strong>Lines:</strong> <span id="lineCount">0</span></span>
+            </div>
 
-         // When file is dragged over the zone (must prevent default to allow drop)
-         dropZone.addEventListener('dragover', function(e) {
-             e.preventDefault();
-             e.stopPropagation();
-             dropZone.classList.add('dragover');
-         });
+            <textarea id="textOutput" placeholder="Extracted text will appear here..." aria-label="Extracted text output"></textarea>
+        </div>
 
-         // When file leaves drop zone
-         dropZone.addEventListener('dragleave', function(e) {
-             e.preventDefault();
-             e.stopPropagation();
-             dropZone.classList.remove('dragover');
-         });
+        <div class="error-message" id="errorMessage" role="alert"></div>
+    </div>
 
-         // When file is dropped - this is where we handle the actual file selection on desktop
-         dropZone.addEventListener('drop', function(e) {
-             e.preventDefault();
-             e.stopPropagation();
-            
-             if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                 handleFileSelect(e.dataTransfer.files[0]);
-             }
-            
-             dropZone.classList.remove('dragover');
-         });
+    <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js"></script>
 
-         /* 
-          * FILE INPUT CHANGE HANDLER - Standard event listener for when user selects files
-          * This handles both click-triggered (mobile/desktop) and drag-drop (desktop) selections
-          */
-         fileInput.addEventListener('change', function(e) {
-             if (e.target.files && e.target.files.length > 0) {
-                 handleFileSelect(e.target.files[0]);
-             }
-            
-             // Reset the input so the same file can be selected again after extraction
-             e.target.value = '';
-         });
+    <script>
+        let currentFile = null;
+        let extractedText = '';
 
-         /* 
-           * Handle file selection - common logic for both click and drag-drop
-           */
-          function handleFileSelect(file) {
-              currentFile = file;
+        const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+        const MAX_PDF_SIZE = 50 * 1024 * 1024;
 
-              // Update UI based on file type
-              const icon = document.querySelector('.upload-icon');
-              const text = document.querySelector('.upload-text');
-             
-              if (!icon || !text) return;
+        const waitForTesseract = new Promise((resolve, reject) => {
+            if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+                resolve(Tesseract);
+                return;
+            }
 
-              if (file.type === 'application/pdf') {
-                  icon.textContent = '📄';
-                  text.textContent = `PDF selected: ${file.name}`;
-              } else {
-                  // Extract extension from filename for better display
-                  const ext = file.name.split('.').pop().toUpperCase();
-                  const typeLabel = file.type.split('/')[1] || ext;
-                  icon.textContent = '🖼️';
-                  text.textContent = `${typeLabel} image: ${file.name}`;
-              }
+            let attempts = 0;
+            const maxAttempts = 20;
 
-              // Reset results area
-              document.getElementById('resultsArea').style.display = 'none';
-              document.getElementById('errorMessage').style.display = 'none';
-          }
+            const poll = () => {
+                attempts++;
+                if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+                    resolve(Tesseract);
+                } else if (attempts >= maxAttempts) {
+                    reject(new Error('Failed to load OCR engine. Please check your internet connection and refresh the page.'));
+                } else {
+                    setTimeout(poll, 1000);
+                }
+            };
+
+            poll();
+        });
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+
+        dropZone.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        dropZone.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+
+        dropZone.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragover');
+
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                handleFileSelect(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+            e.target.value = '';
+        });
+
+        function handleFileSelect(file) {
+            if (!file || file.size === 0) {
+                showError('The selected file appears to be empty. Please choose a valid image or PDF.');
+                resetUploadUI();
+                return;
+            }
+
+            const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+
+            if (isPDF) {
+                if (file.size > MAX_PDF_SIZE) {
+                    showError('PDF is too large (' + formatFileSize(file.size) + '). Maximum size is ' + formatFileSize(MAX_PDF_SIZE) + '.');
+                    resetUploadUI();
+                    return;
+                }
+                if (file.type !== 'application/pdf') {
+                    file = new File([file], file.name, { type: 'application/pdf' });
+                }
+            } else if (!file.type.startsWith('image/')) {
+                showError('Unsupported file type. Please upload an image (JPG, PNG, GIF, BMP, WEBP) or PDF.');
+                resetUploadUI();
+                return;
+            } else {
+                if (file.size > MAX_IMAGE_SIZE) {
+                    showError('Image is too large (' + formatFileSize(file.size) + '). Maximum size is ' + formatFileSize(MAX_IMAGE_SIZE) + '.');
+                    resetUploadUI();
+                    return;
+                }
+            }
+
+            currentFile = file;
+
+            const icon = document.querySelector('.upload-icon');
+            const text = document.querySelector('.upload-text');
+
+            if (isPDF) {
+                icon.textContent = '📄';
+                text.textContent = 'PDF selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+            } else {
+                icon.textContent = '🖼️';
+                const ext = file.name.split('.').pop().toUpperCase();
+                text.textContent = ext + ' image: ' + file.name + ' (' + formatFileSize(file.size) + ')';
+            }
+
+            document.getElementById('resultsArea').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function resetUploadUI() {
+            currentFile = null;
+            const icon = document.querySelector('.upload-icon');
+            const text = document.querySelector('.upload-text');
+            icon.textContent = '📁';
+            text.textContent = 'Drag & drop image or PDF here, or click to select';
+            document.getElementById('resultsArea').style.display = 'none';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        document.getElementById('extractBtn').addEventListener('click', extractText);
 
         async function extractText() {
             if (!currentFile) {
@@ -439,123 +476,126 @@
                 return;
             }
 
-            const language = document.getElementById('languageSelect').value;
             const loading = document.getElementById('loadingIndicator');
             const resultsArea = document.getElementById('resultsArea');
             const extractBtn = document.getElementById('extractBtn');
+            const errorDiv = document.getElementById('errorMessage');
 
-            // Reset UI
             extractedText = '';
             loading.style.display = 'block';
             resultsArea.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            let TesseractLib;
+            try {
+                TesseractLib = await waitForTesseract;
+            } catch (err) {
+                loading.style.display = 'none';
+                showError('Failed to load the OCR engine. Please check your internet connection and refresh.');
+                return;
+            }
+
             extractBtn.disabled = true;
 
+            const language = document.getElementById('languageSelect').value;
+            let worker = null;
+
             try {
-                // Wait for Tesseract.js to load before using it
-                const TesseractLib = await waitForTesseract;
+                worker = await TesseractLib.Tesseract.createWorker(language);
 
-                let worker;
-                try {
-                    // Create worker with correct namespace: Tesseract.Tesseract.createWorker()
-                    worker = await TesseractLib.Tesseract.createWorker(language);
-                    console.log('✓ Tesseract worker created for language:', language);
-                } catch (err) {
-                    throw new Error('Failed to create Tesseract worker: ' + err.message);
-                }
-
-                // Set up progress logging
-                worker.on('init', () => {
-                    console.log('Tesseract worker initialized');
-                });
-
-                worker.on('progress', ({ status, progress }) => {
-                    if (status === TesseractLib.Tesseract.LSTATUS.RECOGNIZING) {
-                        const percent = Math.round(progress.percent * 100);
-                        loading.innerHTML = '<span class="spinner"></span><p>Extracting text... ' + percent + '%</p>';
+                worker.on('progress', function(data) {
+                    if (data.status === 'recognizing' && data.progress) {
+                        const percent = Math.round(data.progress * 100);
+                        loading.innerHTML = '<span class="spinner" aria-hidden="true"></span><p>Extracting text... ' + percent + '%</p>';
                     }
                 });
 
-                // Perform OCR using worker - returns a Promise that resolves when done
-                try {
-                    let result;
+                const isPDF = currentFile.type === 'application/pdf' || currentFile.name.toLowerCase().endsWith('.pdf');
 
-                    if (currentFile.type === 'application/pdf') {
-                        // For PDFs, we need to convert pages to images first
-                        const pdf = await TesseractLib.Tesseract.createPDFWorker(language);
-
-                        // Get number of pages
-                        const numPages = pdf.getNumberOfPages();
-                        console.log(`PDF has ${numPages} page(s)`);
-
-                        let allTexts = [];
-
-                        for (let i = 1; i <= numPages; i++) {
-                            // Convert page to image
-                            await pdf.setPage(i);
-                            const canvas = pdf.getPage(i).then(page => {
-                                const scale = 2; // Higher quality
-                                const viewport = page.getViewport({ scale });
-
-                                const imgCanvas = document.createElement('canvas');
-                                const ctx = imgCanvas.getContext('2d');
-                                imgCanvas.width = viewport.width;
-                                imgCanvas.height = viewport.height;
-
-                                ctx.drawImage(viewport, 0, 0);
-
-                                // Convert to base64 image data
-                                const imgData = await pdf.convertToImage(i);
-                                return { canvas: imgCanvas, imageData: imgData };
-                            });
-
-                            // Recognize the page
-                            result = await TesseractLib.Tesseract.recognize(imgCanvas.toDataURL(), language);
-                            allTexts.push(result.data.text);
-                        }
-
-                        extractedText = allTexts.join('\n\n');
-                    } else {
-                        // For images, use standard recognize()
-                        result = await worker.recognize(currentFile);
-                        extractedText = result.data.text;
-                    }
-
-                    // Clean up worker after use to free resources
-                    await worker.terminate();
-                    console.log('✓ Tesseract worker terminated');
-
-                    // Update UI with results
-                    loading.style.display = 'none';
-                    resultsArea.style.display = 'block';
-                    document.getElementById('textOutput').value = extractedText;
-
-                    // Update stats
-                    updateStats();
-
-                } catch (recognizeError) {
-                    throw new Error('OCR recognition failed: ' + recognizeError.message);
+                if (isPDF) {
+                    extractedText = await processPDF(worker, TesseractLib, language, loading);
+                } else {
+                    const result = await worker.recognize(currentFile);
+                    extractedText = result.data.text;
                 }
+
+                loading.style.display = 'none';
+                resultsArea.style.display = 'block';
+                document.getElementById('textOutput').value = extractedText;
+                updateStats();
 
             } catch (error) {
-                console.error('OCR Error:', error);
-                showError(error.message || 'Failed to extract text from image. Please try again.');
+                loading.style.display = 'none';
+                showError('OCR failed: ' + (error.message || 'Could not extract text from this file. Try a different image or language.'));
             } finally {
-                // Always re-enable button regardless of success or failure
+                if (worker) {
+                    try { await worker.terminate(); } catch (_) {}
+                }
                 extractBtn.disabled = false;
             }
+        }
+
+        async function processPDF(worker, TesseractLib, language, loading) {
+            let pdfJsLib;
+            try {
+                pdfJsLib = await loadPDFJS();
+            } catch (_) {
+                throw new Error('PDF support requires loading an additional library. Check your internet connection.');
+            }
+
+            const arrayBuffer = await currentFile.arrayBuffer();
+            const pdf = await pdfJsLib.getDocument({ data: arrayBuffer }).promise;
+            const numPages = pdf.numPages;
+            let allTexts = [];
+
+            for (let i = 1; i <= numPages; i++) {
+                loading.innerHTML = '<span class="spinner" aria-hidden="true"></span><p>Processing page ' + i + ' of ' + numPages + '...</p>';
+
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({ scale: 2 });
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+                const imageData = canvas.toDataURL('image/png');
+
+                const result = await worker.recognize(imageData);
+                allTexts.push(result.data.text);
+            }
+
+            return allTexts.join('\n\n--- Page ' + numPages + ' ---\n\n');
+        }
+
+        function loadPDFJS() {
+            return new Promise(function(resolve, reject) {
+                if (typeof pdfjsLib !== 'undefined') {
+                    resolve(pdfjsLib);
+                    return;
+                }
+
+                var script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+                script.onload = function() {
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                    resolve(pdfjsLib);
+                };
+                script.onerror = function() {
+                    reject(new Error('Failed to load PDF library.'));
+                };
+                document.head.appendChild(script);
+            });
         }
 
         function updateStats() {
             const text = extractedText || document.getElementById('textOutput').value;
 
-            // Count characters (excluding whitespace)
             const charCount = text.replace(/\s/g, '').length;
-
-            // Count words
             const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-
-            // Count lines
-            const lineCount = text.trim() === '' ? 0 : text.split('\n').filter(line => line.trim()).length;
+            const lineCount = text.trim() === '' ? 0 : text.split('\n').filter(function(line) { return line.trim(); }).length;
 
             document.getElementById('charCount').textContent = charCount.toLocaleString();
             document.getElementById('wordCount').textContent = wordCount.toLocaleString();
@@ -566,26 +606,51 @@
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
-
-            // Clear loading indicator
-            const loading = document.getElementById('loadingIndicator');
-            loading.style.display = 'none';
+            document.getElementById('loadingIndicator').style.display = 'none';
         }
 
-        function copyToClipboard() {
+        document.getElementById('copyBtn').addEventListener('click', function() {
             const textOutput = document.getElementById('textOutput');
-            textOutput.select();
-            document.execCommand('copy');
-            
-            // Show feedback
-            const btn = document.querySelector('.btn-secondary');
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Copied!';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 1500);
-        }
+            if (!textOutput.value.trim()) {
+                showError('No text to copy. Please extract text first.');
+                return;
+            }
 
+            textOutput.select();
+            textOutput.setSelectionRange(0, 999999);
+
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('copyBtn');
+                const original = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.disabled = true;
+                setTimeout(function() {
+                    btn.textContent = original;
+                    btn.disabled = false;
+                }, 1500);
+            } catch (_) {
+                showError('Failed to copy. Your browser may not support this feature.');
+            }
+        });
+
+        document.getElementById('downloadBtn').addEventListener('click', function(e) {
+            const textOutput = document.getElementById('textOutput');
+            if (!textOutput.value.trim()) {
+                e.preventDefault();
+                showError('No text to download. Please extract text first.');
+                return;
+            }
+
+            const blob = new Blob([textOutput.value], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            this.href = url;
+            this.download = 'extracted-text-' + Date.now() + '.txt';
+
+            setTimeout(function() {
+                URL.revokeObjectURL(url);
+            }, 1000);
+        });
     </script>
 </body>
 </html>
