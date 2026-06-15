@@ -1,64 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Free Image to Text Converter - Online OCR Tool | Extract Text from Images & PDFs</title>
     <meta name="description" content="Convert images and PDFs to editable text instantly. Free online OCR tool that extracts text from screenshots, photos, scanned documents without signup or API keys. Supports 100+ languages.">
     <meta name="keywords" content="image to text converter, ocr tool, extract text from image, pdf to text, online ocr, free ocr, convert image to text">
     <meta property="og:title" content="Free Image to Text Converter - Online OCR Tool">
     <meta property="og:description" content="Convert images and PDFs to editable text instantly. Free online OCR tool with 100+ language support.">
     <meta property="og:type" content="website">
+    <meta name="theme-color" content="#667eea" id="themeColor">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="canonical" href="https://trigun6187.github.io/img2txtocr/">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon-192.png">
 
     <style>
+        :root {
+            --bg-body: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-container: #ffffff;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --bg-upload: #fafafa;
+            --border-upload: #cccccc;
+            --bg-upload-hover: #f0f4ff;
+            --border-upload-hover: #667eea;
+            --bg-input: #f5f5f5;
+            --bg-error: #ffebee;
+            --text-error: #c62828;
+            --bg-badge: #e8f4fd;
+            --text-badge: #1967d2;
+            --border-section: #e0e0e0;
+            --shadow: rgba(0,0,0,0.3);
+            --bg-option: #f8f9ff;
+            --bg-history: #f8f9ff;
+            --text-link: #667eea;
+            --bg-success: #e8f5e9;
+            --text-success: #2e7d32;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0f0c29;
+            --bg-container: #1a1a2e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #aaaaaa;
+            --text-muted: #777777;
+            --bg-upload: #16213e;
+            --border-upload: #2a2a4a;
+            --bg-upload-hover: #1a2744;
+            --border-upload-hover: #667eea;
+            --bg-input: #2a2a4a;
+            --bg-error: #3a1a1a;
+            --text-error: #ef5350;
+            --bg-badge: #1a237e;
+            --text-badge: #90caf9;
+            --border-section: #2a2a4a;
+            --shadow: rgba(0,0,0,0.5);
+            --bg-option: #12122a;
+            --bg-history: #12122a;
+            --text-link: #90caf9;
+            --bg-success: #1b3a1b;
+            --text-success: #66bb6a;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-body);
             min-height: 100vh;
             padding: 20px;
+            transition: background 0.3s;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background: white;
+            background: var(--bg-container);
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px var(--shadow);
             padding: 40px;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 10px;
         }
 
         h1 {
             text-align: center;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
+            color: var(--text-primary);
+            font-size: 2.2rem;
+            transition: color 0.3s;
         }
+
+        .header-row h1 { margin-bottom: 0; }
+
+        #themeToggle {
+            background: none;
+            border: 2px solid var(--border-section);
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s;
+            color: var(--text-primary);
+        }
+
+        #themeToggle:hover { background: var(--bg-input); }
 
         .subtitle {
             text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            transition: color 0.3s;
         }
 
         .features {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 12px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
 
         .feature-badge {
-            background: #e8f4fd;
-            color: #1967d2;
-            padding: 8px 16px;
+            background: var(--bg-badge);
+            color: var(--text-badge);
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 500;
+            transition: background 0.3s, color 0.3s;
         }
 
         #fileInput {
@@ -75,48 +161,118 @@
         }
 
         .upload-area {
-            border: 3px dashed #ccc;
+            border: 3px dashed var(--border-upload);
             border-radius: 12px;
-            padding: 40px;
+            padding: 35px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #fafafa;
-            margin-bottom: 25px;
+            background: var(--bg-upload);
+            margin-bottom: 15px;
         }
 
         .upload-area:hover, .upload-area.dragover {
-            border-color: #667eea;
-            background: #f0f4ff;
+            border-color: var(--border-upload-hover);
+            background: var(--bg-upload-hover);
         }
 
         .upload-area:focus-visible {
-            outline: 3px solid #667eea;
+            outline: 3px solid var(--border-upload-hover);
             outline-offset: 2px;
         }
 
-        .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #ccc;
-            transition: all 0.3s;
+        .upload-icon { font-size: 3rem; margin-bottom: 12px; transition: all 0.3s; }
+        .upload-text { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 8px; transition: color 0.3s; }
+        .upload-hint { font-size: 0.85rem; color: var(--text-muted); transition: color 0.3s; }
+
+        .camera-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
         }
 
-        .upload-text {
-            font-size: 1.2rem;
-            color: #666;
+        .camera-row button {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .accordion {
+            border: 1px solid var(--border-section);
+            border-radius: 10px;
+            margin-bottom: 18px;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .accordion-header {
+            background: var(--bg-option);
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.92rem;
+            user-select: none;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .accordion-header:hover { opacity: 0.85; }
+        .accordion-header .arrow { transition: transform 0.25s; font-size: 0.8rem; }
+        .accordion-header.open .arrow { transform: rotate(180deg); }
+
+        .accordion-body {
+            padding: 0 16px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .accordion-body.open {
+            max-height: 400px;
+            padding: 14px 16px;
+        }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 10px;
+            flex-wrap: wrap;
         }
 
-        .upload-hint {
+        .option-row label {
+            color: var(--text-secondary);
             font-size: 0.9rem;
-            color: #999;
+            min-width: 80px;
+            transition: color 0.3s;
+        }
+
+        .option-row input[type="range"] {
+            flex: 1;
+            min-width: 100px;
+            accent-color: #667eea;
+        }
+
+        .option-row .value-label {
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            min-width: 36px;
+            text-align: right;
+        }
+
+        .option-row input[type="checkbox"] {
+            accent-color: #667eea;
+            width: 18px;
+            height: 18px;
         }
 
         .controls {
             display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 22px;
             flex-wrap: wrap;
         }
 
@@ -126,17 +282,17 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
         }
 
         select {
-            background: #f5f5f5;
-            min-width: 180px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            min-width: 170px;
+            transition: background 0.3s, color 0.3s;
         }
 
-        select:focus-visible {
-            outline: 2px solid #667eea;
-            outline-offset: 2px;
-        }
+        select:focus-visible { outline: 2px solid #667eea; outline-offset: 2px; }
 
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -145,8 +301,9 @@
         }
 
         .btn-secondary {
-            background: #e8e8e8;
-            color: #333;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.3s;
         }
 
         .btn-success {
@@ -154,46 +311,14 @@
             color: white;
         }
 
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border-upload-hover);
+            color: var(--text-link);
+        }
+
         button:hover { opacity: 0.9; transform: translateY(-1px); }
-        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-        .results-area {
-            margin-top: 30px;
-            display: none;
-        }
-
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eee;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .results-title {
-            font-size: 1.3rem;
-            color: #333;
-            font-weight: 600;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 400px;
-            padding: 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-            resize: vertical;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .loading {
             display: none;
@@ -205,77 +330,197 @@
 
         .spinner {
             display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
+            width: 36px;
+            height: 36px;
+            border: 4px solid #e0e0e0;
             border-top-color: #667eea;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .error-message {
-            background: #ffebee;
-            color: #c62828;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-top: 20px;
+        .results-area {
+            margin-top: 25px;
             display: none;
         }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-section);
+            flex-wrap: wrap;
+            gap: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .results-title {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .confidence-badge {
+            background: var(--bg-success);
+            color: var(--text-success);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: none;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 350px;
+            padding: 18px;
+            border: 2px solid var(--border-section);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            resize: vertical;
+            background: var(--bg-container);
+            color: var(--text-primary);
+            transition: border-color 0.3s, background 0.3s, color 0.3s;
+        }
+
+        textarea:focus { outline: none; border-color: #667eea; }
 
         .stats {
             display: flex;
-            gap: 30px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            color: #666;
+            gap: 24px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             flex-wrap: wrap;
+            transition: color 0.3s;
         }
 
-        .stat-item strong {
-            color: #333;
-            margin-right: 8px;
-        }
+        .stat-item strong { color: var(--text-primary); margin-right: 6px; transition: color 0.3s; }
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
+        .action-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
 
-        .file-info {
-            display: none;
-            background: #e8f4fd;
-            color: #1967d2;
-            padding: 10px 16px;
+        .error-message {
+            background: var(--bg-error);
+            color: var(--text-error);
+            padding: 14px 18px;
             border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            margin-top: 18px;
+            display: none;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .history-section {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .history-section.visible { display: block; }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .history-item {
+            background: var(--bg-history);
+            border: 1px solid var(--border-section);
+            border-radius: 8px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.3s;
+        }
+
+        .history-item:hover { border-color: #667eea; }
+
+        .history-item .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .history-item .preview {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 20px; }
+            h1 { font-size: 1.6rem; }
+            .header-row h1 { font-size: 1.6rem; }
+            .upload-area { padding: 25px; }
+            textarea { min-height: 250px; }
+            select { min-width: 140px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Free Image to Text Converter</h1>
+        <div class="header-row">
+            <h1>Free Image to Text Converter</h1>
+            <button id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+        </div>
         <p class="subtitle">Convert images and PDFs to editable text instantly &mdash; No signup, no API keys, 100% free</p>
 
         <div class="features">
             <span class="feature-badge">Instant Processing</span>
-            <span class="feature-badge">Private & Secure</span>
+            <span class="feature-badge">Private &amp; Secure</span>
             <span class="feature-badge">100+ Languages</span>
             <span class="feature-badge">Works Offline</span>
         </div>
 
         <input type="file" id="fileInput" accept="image/*,.pdf">
 
-        <div id="fileInfo" class="file-info"></div>
-
         <div class="upload-area" id="dropZone" role="button" tabindex="0" aria-label="Upload area. Click to browse files or drag and drop an image or PDF here.">
             <div class="upload-icon" aria-hidden="true">📁</div>
             <p class="upload-text">Drag &amp; drop image or PDF here, or click to select</p>
-            <p class="upload-hint">Supported formats: JPG, PNG, GIF, BMP, WEBP, PDF</p>
+            <p class="upload-hint">Supported: JPG, PNG, GIF, BMP, WEBP, PDF</p>
+        </div>
+
+        <div class="camera-row">
+            <button class="btn-secondary" id="cameraBtn" aria-label="Take a photo with your camera">Take Photo</button>
+            <button class="btn-secondary" id="clearBtn" aria-label="Clear selected file">Clear</button>
+        </div>
+
+        <div class="accordion" id="optionsAccordion">
+            <div class="accordion-header" id="optionsToggle">
+                <span>Image Options</span>
+                <span class="arrow">&#9660;</span>
+            </div>
+            <div class="accordion-body" id="optionsBody">
+                <div class="option-row">
+                    <input type="checkbox" id="optGrayscale">
+                    <label for="optGrayscale">Grayscale</label>
+                </div>
+                <div class="option-row">
+                    <input type="checkbox" id="optAutoRotate" checked>
+                    <label for="optAutoRotate">Auto-rotate</label>
+                </div>
+                <div class="option-row">
+                    <label for="optBrightness">Brightness</label>
+                    <input type="range" id="optBrightness" min="50" max="200" value="100">
+                    <span class="value-label" id="brightnessVal">100%</span>
+                </div>
+                <div class="option-row">
+                    <label for="optContrast">Contrast</label>
+                    <input type="range" id="optContrast" min="50" max="200" value="100">
+                    <span class="value-label" id="contrastVal">100%</span>
+                </div>
+            </div>
         </div>
 
         <div class="controls">
@@ -291,18 +536,20 @@
                 <option value="por">Portuguese</option>
                 <option value="rus">Russian</option>
             </select>
-
             <button class="btn-primary" id="extractBtn" aria-label="Extract text from the selected image or PDF">Extract Text</button>
         </div>
 
         <div class="loading" id="loadingIndicator" role="status" aria-live="polite">
             <span class="spinner" aria-hidden="true"></span>
-            <p>Extracting text from your image... This may take a moment.</p>
+            <p id="loadingText">Extracting text from your image...</p>
         </div>
 
         <div class="results-area" id="resultsArea">
             <div class="results-header">
-                <h2 class="results-title">Extracted Text</h2>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <h2 class="results-title">Extracted Text</h2>
+                    <span class="confidence-badge" id="confidenceBadge"></span>
+                </div>
                 <div class="action-buttons">
                     <button class="btn-secondary" id="copyBtn" aria-label="Copy extracted text to clipboard">Copy</button>
                     <a id="downloadBtn" download="extracted-text.txt" href="#" class="btn-success" style="text-decoration: none; padding: 12px 20px; font-size: 1rem; border-radius: 8px; display: inline-block;" aria-label="Download extracted text as TXT file">Download</a>
@@ -319,47 +566,154 @@
         </div>
 
         <div class="error-message" id="errorMessage" role="alert"></div>
+
+        <div class="history-section" id="historySection">
+            <div class="accordion">
+                <div class="accordion-header" id="historyToggle">
+                    <span>History</span>
+                    <span class="arrow">&#9660;</span>
+                </div>
+                <div class="accordion-body" id="historyBody">
+                    <div class="history-list" id="historyList"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').catch(function() {});
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract@5/dist/tesseract.min.js"></script>
 
     <script>
         let currentFile = null;
         let extractedText = '';
+        let worker = null;
+        let workerLang = '';
+        let isProcessing = false;
 
         const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
         const MAX_PDF_SIZE = 50 * 1024 * 1024;
+        const HISTORY_KEY = 'ocr_history';
 
-        const waitForTesseract = new Promise((resolve, reject) => {
-            if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
-                resolve(Tesseract);
-                return;
-            }
+        // ---- Theme ----
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('ocr_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
-            let attempts = 0;
-            const maxAttempts = 20;
+        themeToggle.addEventListener('click', function() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('ocr_theme', next);
+            themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+            document.getElementById('themeColor').content = next === 'dark' ? '#1a1a2e' : '#667eea';
+        });
 
-            const poll = () => {
-                attempts++;
+        // ---- Options Accordion ----
+        document.getElementById('optionsToggle').addEventListener('click', function() {
+            this.classList.toggle('open');
+            document.getElementById('optionsBody').classList.toggle('open');
+        });
+
+        document.getElementById('historyToggle').addEventListener('click', function() {
+            this.classList.toggle('open');
+            document.getElementById('historyBody').classList.toggle('open');
+        });
+
+        document.getElementById('optBrightness').addEventListener('input', function() {
+            document.getElementById('brightnessVal').textContent = this.value + '%';
+        });
+
+        document.getElementById('optContrast').addEventListener('input', function() {
+            document.getElementById('contrastVal').textContent = this.value + '%';
+        });
+
+        // ---- Wait for Tesseract ----
+        const waitForTesseract = new Promise(function(resolve, reject) {
+            function check() {
                 if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
                     resolve(Tesseract);
-                } else if (attempts >= maxAttempts) {
-                    reject(new Error('Failed to load OCR engine. Please check your internet connection and refresh the page.'));
-                } else {
-                    setTimeout(poll, 1000);
+                    return;
                 }
-            };
-
-            poll();
+                let attempts = 0;
+                function poll() {
+                    attempts++;
+                    if (typeof Tesseract !== 'undefined' && typeof Tesseract.Tesseract !== 'undefined') {
+                        resolve(Tesseract);
+                    } else if (attempts >= 20) {
+                        reject(new Error('Failed to load OCR engine. Check your internet and refresh.'));
+                    } else {
+                        setTimeout(poll, 1000);
+                    }
+                }
+                setTimeout(poll, 500);
+            }
+            check();
         });
 
+        // ---- Pre-create worker on page load ----
+        let TesseractLib = null;
+        let tesseractReady = false;
+
+        waitForTesseract.then(function(lib) {
+            TesseractLib = lib;
+            tesseractReady = true;
+            initWorker('eng');
+        }).catch(function() {
+            showError('OCR engine failed to load. Check your internet connection.');
+        });
+
+        function initWorker(lang) {
+            if (worker) {
+                try { worker.terminate(); } catch (_) {}
+                worker = null;
+            }
+            if (!TesseractLib) return;
+            workerLang = lang;
+            TesseractLib.Tesseract.createWorker(lang).then(function(w) {
+                worker = w;
+                workerLang = lang;
+                console.log('Worker ready for:', lang);
+            }).catch(function() {});
+        }
+
+        // ---- Language change re-creates worker ----
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            const lang = this.value;
+            if (lang !== workerLang) {
+                initWorker(lang);
+            }
+        });
+
+        // ---- Camera ----
+        document.getElementById('cameraBtn').addEventListener('click', function() {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.capture = 'environment';
+            input.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    handleFileSelect(e.target.files[0]);
+                }
+            });
+            input.click();
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', function() {
+            resetUploadUI();
+            document.getElementById('resultsArea').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        });
+
+        // ---- File upload ----
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
-        const fileInfo = document.getElementById('fileInfo');
 
-        dropZone.addEventListener('click', function() {
-            fileInput.click();
-        });
+        dropZone.addEventListener('click', function() { fileInput.click(); });
 
         dropZone.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -368,16 +722,12 @@
             }
         });
 
-        dropZone.addEventListener('dragenter', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            dropZone.classList.add('dragover');
-        });
-
-        dropZone.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            dropZone.classList.add('dragover');
+        ['dragenter', 'dragover'].forEach(function(ev) {
+            dropZone.addEventListener(ev, function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('dragover');
+            });
         });
 
         dropZone.addEventListener('dragleave', function(e) {
@@ -390,7 +740,6 @@
             e.preventDefault();
             e.stopPropagation();
             dropZone.classList.remove('dragover');
-
             if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
                 handleFileSelect(e.dataTransfer.files[0]);
             }
@@ -403,6 +752,7 @@
             e.target.value = '';
         });
 
+        // ---- File handling ----
         function handleFileSelect(file) {
             if (!file || file.size === 0) {
                 showError('The selected file appears to be empty. Please choose a valid image or PDF.');
@@ -410,11 +760,11 @@
                 return;
             }
 
-            const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+            var isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
 
             if (isPDF) {
                 if (file.size > MAX_PDF_SIZE) {
-                    showError('PDF is too large (' + formatFileSize(file.size) + '). Maximum size is ' + formatFileSize(MAX_PDF_SIZE) + '.');
+                    showError('PDF is too large (' + formatFileSize(file.size) + '). Max size is ' + formatFileSize(MAX_PDF_SIZE) + '.');
                     resetUploadUI();
                     return;
                 }
@@ -427,23 +777,22 @@
                 return;
             } else {
                 if (file.size > MAX_IMAGE_SIZE) {
-                    showError('Image is too large (' + formatFileSize(file.size) + '). Maximum size is ' + formatFileSize(MAX_IMAGE_SIZE) + '.');
+                    showError('Image is too large (' + formatFileSize(file.size) + '). Max size is ' + formatFileSize(MAX_IMAGE_SIZE) + '.');
                     resetUploadUI();
                     return;
                 }
             }
 
             currentFile = file;
-
-            const icon = document.querySelector('.upload-icon');
-            const text = document.querySelector('.upload-text');
+            var icon = document.querySelector('.upload-icon');
+            var text = document.querySelector('.upload-text');
 
             if (isPDF) {
                 icon.textContent = '📄';
                 text.textContent = 'PDF selected: ' + file.name + ' (' + formatFileSize(file.size) + ')';
             } else {
                 icon.textContent = '🖼️';
-                const ext = file.name.split('.').pop().toUpperCase();
+                var ext = file.name.split('.').pop().toUpperCase();
                 text.textContent = ext + ' image: ' + file.name + ' (' + formatFileSize(file.size) + ')';
             }
 
@@ -453,8 +802,8 @@
 
         function resetUploadUI() {
             currentFile = null;
-            const icon = document.querySelector('.upload-icon');
-            const text = document.querySelector('.upload-text');
+            var icon = document.querySelector('.upload-icon');
+            var text = document.querySelector('.upload-text');
             icon.textContent = '📁';
             text.textContent = 'Drag & drop image or PDF here, or click to select';
             document.getElementById('resultsArea').style.display = 'none';
@@ -462,12 +811,71 @@
 
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            var k = 1024;
+            var sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            var i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
         }
 
+        // ---- Image preprocessing ----
+        function preprocessImage(file) {
+            return new Promise(function(resolve, reject) {
+                if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                    resolve(file);
+                    return;
+                }
+
+                var grayscale = document.getElementById('optGrayscale').checked;
+                var brightness = parseInt(document.getElementById('optBrightness').value);
+                var contrast = parseInt(document.getElementById('optContrast').value);
+
+                if (!grayscale && brightness === 100 && contrast === 100) {
+                    resolve(file);
+                    return;
+                }
+
+                var img = new Image();
+                img.onload = function() {
+                    var w = img.naturalWidth;
+                    var h = img.naturalHeight;
+
+                    var minDim = 800;
+                    if (w < minDim && h < minDim) {
+                        var scale = Math.min(minDim / w, minDim / h, 3);
+                        w = Math.round(w * scale);
+                        h = Math.round(h * scale);
+                    }
+
+                    var canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    var ctx = canvas.getContext('2d');
+
+                    var filters = [];
+                    if (grayscale) filters.push('grayscale(100%)');
+                    if (brightness !== 100) filters.push('brightness(' + (brightness / 100) + ')');
+                    if (contrast !== 100) filters.push('contrast(' + (contrast / 100) + ')');
+
+                    if (filters.length > 0) {
+                        ctx.filter = filters.join(' ');
+                    }
+
+                    ctx.drawImage(img, 0, 0, w, h);
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            var processedFile = new File([blob], file.name, { type: 'image/png' });
+                            resolve(processedFile);
+                        } else {
+                            resolve(file);
+                        }
+                    }, 'image/png');
+                };
+                img.onerror = function() { resolve(file); };
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        // ---- Extract text ----
         document.getElementById('extractBtn').addEventListener('click', extractText);
 
         async function extractText() {
@@ -476,46 +884,80 @@
                 return;
             }
 
-            const loading = document.getElementById('loadingIndicator');
-            const resultsArea = document.getElementById('resultsArea');
-            const extractBtn = document.getElementById('extractBtn');
-            const errorDiv = document.getElementById('errorMessage');
+            if (isProcessing) return;
+            isProcessing = true;
+
+            var loading = document.getElementById('loadingIndicator');
+            var loadingText = document.getElementById('loadingText');
+            var resultsArea = document.getElementById('resultsArea');
+            var extractBtn = document.getElementById('extractBtn');
+            var errorDiv = document.getElementById('errorMessage');
+            var confidenceBadge = document.getElementById('confidenceBadge');
 
             extractedText = '';
             loading.style.display = 'block';
             resultsArea.style.display = 'none';
             errorDiv.style.display = 'none';
+            confidenceBadge.style.display = 'none';
 
-            let TesseractLib;
-            try {
-                TesseractLib = await waitForTesseract;
-            } catch (err) {
+            if (!tesseractReady || !TesseractLib) {
                 loading.style.display = 'none';
-                showError('Failed to load the OCR engine. Please check your internet connection and refresh.');
+                showError('OCR engine is still loading. Please wait a moment and try again.');
+                isProcessing = false;
                 return;
             }
 
             extractBtn.disabled = true;
-
-            const language = document.getElementById('languageSelect').value;
-            let worker = null;
+            var lang = document.getElementById('languageSelect').value;
 
             try {
-                worker = await TesseractLib.Tesseract.createWorker(language);
-
-                worker.on('progress', function(data) {
-                    if (data.status === 'recognizing' && data.progress) {
-                        const percent = Math.round(data.progress * 100);
-                        loading.innerHTML = '<span class="spinner" aria-hidden="true"></span><p>Extracting text... ' + percent + '%</p>';
+                if (!worker || lang !== workerLang) {
+                    initWorker(lang);
+                    var waitStart = Date.now();
+                    while ((!worker || workerLang !== lang) && (Date.now() - waitStart < 15000)) {
+                        await new Promise(function(r) { setTimeout(r, 200); });
                     }
-                });
+                    if (!worker) {
+                        throw new Error('Failed to create OCR worker. Please refresh and try again.');
+                    }
+                }
 
-                const isPDF = currentFile.type === 'application/pdf' || currentFile.name.toLowerCase().endsWith('.pdf');
+                var isPDF = currentFile.type === 'application/pdf' || currentFile.name.toLowerCase().endsWith('.pdf');
+                var autoRotate = document.getElementById('optAutoRotate').checked;
 
                 if (isPDF) {
-                    extractedText = await processPDF(worker, TesseractLib, language, loading);
+                    loadingText.textContent = 'Processing PDF...';
+                    extractedText = await processPDF(worker, lang, loading, loadingText);
                 } else {
-                    const result = await worker.recognize(currentFile);
+                    loadingText.textContent = 'Preprocessing image...';
+
+                    var processedFile = await preprocessImage(currentFile);
+                    var recognizeOptions = {};
+
+                    if (autoRotate) {
+                        recognizeOptions.rotateAuto = true;
+                    }
+
+                    loadingText.textContent = 'Extracting text...';
+
+                    var result = await worker.recognize(processedFile, {}, recognizeOptions);
+
+                    if (result.data.confidence) {
+                        var conf = Math.round(result.data.confidence);
+                        confidenceBadge.textContent = 'Confidence: ' + conf + '%';
+                        confidenceBadge.style.display = 'inline-block';
+                        if (conf < 50) {
+                            confidenceBadge.style.background = 'var(--bg-error)';
+                            confidenceBadge.style.color = 'var(--text-error)';
+                        } else if (conf < 75) {
+                            confidenceBadge.style.background = '#fff3e0';
+                            confidenceBadge.style.color = '#e65100';
+                        } else {
+                            confidenceBadge.style.background = 'var(--bg-success)';
+                            confidenceBadge.style.color = 'var(--text-success)';
+                        }
+                    }
+
                     extractedText = result.data.text;
                 }
 
@@ -523,47 +965,44 @@
                 resultsArea.style.display = 'block';
                 document.getElementById('textOutput').value = extractedText;
                 updateStats();
+                saveToHistory(extractedText, currentFile.name);
 
             } catch (error) {
                 loading.style.display = 'none';
-                showError('OCR failed: ' + (error.message || 'Could not extract text from this file. Try a different image or language.'));
+                showError('OCR failed: ' + (error.message || 'Could not extract text from this file.'));
             } finally {
-                if (worker) {
-                    try { await worker.terminate(); } catch (_) {}
-                }
                 extractBtn.disabled = false;
+                isProcessing = false;
             }
         }
 
-        async function processPDF(worker, TesseractLib, language, loading) {
-            let pdfJsLib;
+        async function processPDF(worker, lang, loading, loadingText) {
+            var pdfJsLib;
             try {
                 pdfJsLib = await loadPDFJS();
             } catch (_) {
-                throw new Error('PDF support requires loading an additional library. Check your internet connection.');
+                throw new Error('PDF support requires loading an additional library. Check your internet.');
             }
 
-            const arrayBuffer = await currentFile.arrayBuffer();
-            const pdf = await pdfJsLib.getDocument({ data: arrayBuffer }).promise;
-            const numPages = pdf.numPages;
-            let allTexts = [];
+            var arrayBuffer = await currentFile.arrayBuffer();
+            var pdf = await pdfJsLib.getDocument({ data: arrayBuffer }).promise;
+            var numPages = pdf.numPages;
+            var allTexts = [];
 
-            for (let i = 1; i <= numPages; i++) {
-                loading.innerHTML = '<span class="spinner" aria-hidden="true"></span><p>Processing page ' + i + ' of ' + numPages + '...</p>';
+            for (var i = 1; i <= numPages; i++) {
+                loadingText.textContent = 'Processing page ' + i + ' of ' + numPages + '...';
 
-                const page = await pdf.getPage(i);
-                const viewport = page.getViewport({ scale: 2 });
+                var page = await pdf.getPage(i);
+                var viewport = page.getViewport({ scale: 2 });
 
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
                 canvas.width = viewport.width;
                 canvas.height = viewport.height;
 
                 await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-
-                const imageData = canvas.toDataURL('image/png');
-
-                const result = await worker.recognize(imageData);
+                var imageData = canvas.toDataURL('image/png');
+                var result = await worker.recognize(imageData);
                 allTexts.push(result.data.text);
             }
 
@@ -576,26 +1015,22 @@
                     resolve(pdfjsLib);
                     return;
                 }
-
                 var script = document.createElement('script');
                 script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
                 script.onload = function() {
                     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
                     resolve(pdfjsLib);
                 };
-                script.onerror = function() {
-                    reject(new Error('Failed to load PDF library.'));
-                };
+                script.onerror = function() { reject(new Error('Failed to load PDF library.')); };
                 document.head.appendChild(script);
             });
         }
 
         function updateStats() {
-            const text = extractedText || document.getElementById('textOutput').value;
-
-            const charCount = text.replace(/\s/g, '').length;
-            const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-            const lineCount = text.trim() === '' ? 0 : text.split('\n').filter(function(line) { return line.trim(); }).length;
+            var text = extractedText || document.getElementById('textOutput').value;
+            var charCount = text.replace(/\s/g, '').length;
+            var wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            var lineCount = text.trim() === '' ? 0 : text.split('\n').filter(function(l) { return l.trim(); }).length;
 
             document.getElementById('charCount').textContent = charCount.toLocaleString();
             document.getElementById('wordCount').textContent = wordCount.toLocaleString();
@@ -603,26 +1038,25 @@
         }
 
         function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
+            var errorDiv = document.getElementById('errorMessage');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
             document.getElementById('loadingIndicator').style.display = 'none';
         }
 
+        // ---- Copy ----
         document.getElementById('copyBtn').addEventListener('click', function() {
-            const textOutput = document.getElementById('textOutput');
+            var textOutput = document.getElementById('textOutput');
             if (!textOutput.value.trim()) {
                 showError('No text to copy. Please extract text first.');
                 return;
             }
-
             textOutput.select();
             textOutput.setSelectionRange(0, 999999);
-
             try {
                 document.execCommand('copy');
-                const btn = document.getElementById('copyBtn');
-                const original = btn.textContent;
+                var btn = this;
+                var original = btn.textContent;
                 btn.textContent = 'Copied!';
                 btn.disabled = true;
                 setTimeout(function() {
@@ -634,23 +1068,84 @@
             }
         });
 
+        // ---- Download ----
         document.getElementById('downloadBtn').addEventListener('click', function(e) {
-            const textOutput = document.getElementById('textOutput');
+            var textOutput = document.getElementById('textOutput');
             if (!textOutput.value.trim()) {
                 e.preventDefault();
                 showError('No text to download. Please extract text first.');
                 return;
             }
-
-            const blob = new Blob([textOutput.value], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
+            var blob = new Blob([textOutput.value], { type: 'text/plain;charset=utf-8' });
+            var url = URL.createObjectURL(blob);
             this.href = url;
             this.download = 'extracted-text-' + Date.now() + '.txt';
-
-            setTimeout(function() {
-                URL.revokeObjectURL(url);
-            }, 1000);
+            setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
         });
+
+        // ---- History ----
+        function saveToHistory(text, fileName) {
+            if (!text.trim()) return;
+            var history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            var confEl = document.getElementById('confidenceBadge');
+            var confidenceText = confEl.style.display !== 'none' ? confEl.textContent : '';
+
+            history.unshift({
+                id: Date.now(),
+                preview: text.substring(0, 150) + (text.length > 150 ? '...' : ''),
+                fileName: fileName,
+                confidence: confidenceText,
+                timestamp: new Date().toLocaleString(),
+                fullText: text
+            });
+
+            if (history.length > 10) history = history.slice(0, 10);
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            var history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+            var section = document.getElementById('historySection');
+            var list = document.getElementById('historyList');
+
+            if (history.length === 0) {
+                section.classList.remove('visible');
+                return;
+            }
+
+            section.classList.add('visible');
+            list.innerHTML = '';
+
+            history.forEach(function(item) {
+                var div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML =
+                    '<div class="meta">' +
+                        '<span>' + escapeHtml(item.fileName || 'Unknown') + '</span>' +
+                        '<span>' + escapeHtml(item.timestamp) + (item.confidence ? ' &middot; ' + escapeHtml(item.confidence) : '') + '</span>' +
+                    '</div>' +
+                    '<div class="preview">' + escapeHtml(item.preview) + '</div>';
+
+                div.addEventListener('click', function() {
+                    document.getElementById('textOutput').value = item.fullText;
+                    extractedText = item.fullText;
+                    document.getElementById('resultsArea').style.display = 'block';
+                    document.getElementById('errorMessage').style.display = 'none';
+                    updateStats();
+                });
+
+                list.appendChild(div);
+            });
+        }
+
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        renderHistory();
     </script>
 </body>
 </html>

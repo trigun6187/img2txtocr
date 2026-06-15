@@ -1,0 +1,19 @@
+{
+  "name": "Free OCR Tool - Image to Text Converter",
+  "short_name": "OCR Tool",
+  "description": "Convert images and PDFs to editable text instantly in your browser. No uploads, 100% private.",
+  "start_url": "/img2txtocr/",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#667eea",
+  "orientation": "any",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
