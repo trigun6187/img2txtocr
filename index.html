@@ -494,6 +494,10 @@
             </div>
             <div class="accordion-body" id="optionsBody">
                 <div class="option-row">
+                    <input type="checkbox" id="optAuto" checked>
+                    <label for="optAuto"><strong>Auto Enhance</strong> &mdash; analyzes image, tunes settings</label>
+                </div>
+                <div class="option-row">
                     <input type="checkbox" id="optGrayscale">
                     <label for="optGrayscale">Grayscale</label>
                 </div>
@@ -622,6 +626,27 @@
         document.getElementById('optContrast').addEventListener('input', function() {
             document.getElementById('contrastVal').textContent = this.value + '%';
         });
+
+        // ---- Auto Enhance toggles manual controls ----
+        (function() {
+            var autoCb = document.getElementById('optAuto');
+            var manualCtrls = [
+                document.getElementById('optGrayscale'),
+                document.getElementById('optBrightness'),
+                document.getElementById('optContrast')
+            ];
+            function toggleManual() {
+                var on = !autoCb.checked;
+                manualCtrls.forEach(function(el) {
+                    el.disabled = !on;
+                    el.style.opacity = on ? '1' : '0.4';
+                });
+                document.getElementById('brightnessVal').style.opacity = on ? '1' : '0.4';
+                document.getElementById('contrastVal').style.opacity = on ? '1' : '0.4';
+            }
+            autoCb.addEventListener('change', toggleManual);
+            toggleManual();
+        })();
 
         // ---- Wait for Tesseract ----
         const waitForTesseract = new Promise(function(resolve, reject) {
@@ -809,6 +834,38 @@
         }
 
         // ---- Image preprocessing ----
+        function analyzeImage(ctx, w, h) {
+            var data = ctx.getImageData(0, 0, Math.min(w, 400), Math.min(h, 400)).data;
+            var n = data.length / 4;
+            var sumR = 0, sumG = 0, sumB = 0, sumBright = 0, sumSq = 0;
+            for (var i = 0; i < data.length; i += 4) {
+                var r = data[i], g = data[i+1], b = data[i+2];
+                var bright = 0.299 * r + 0.587 * g + 0.114 * b;
+                sumR += r; sumG += g; sumB += b;
+                sumBright += bright; sumSq += bright * bright;
+            }
+            var avgBright = sumBright / n;
+            var stdDev = Math.sqrt(sumSq / n - avgBright * avgBright);
+            var avgR = sumR / n, avgG = sumG / n, avgB = sumB / n;
+            var colorSpread = Math.abs(avgR - avgG) + Math.abs(avgG - avgB) + Math.abs(avgR - avgB);
+
+            var settings = { grayscale: false, brightness: 100, contrast: 100 };
+
+            if (colorSpread < 30) settings.grayscale = true;
+
+            if (avgBright < 90) {
+                settings.brightness = Math.min(150, Math.round(11500 / avgBright));
+            } else if (avgBright > 180) {
+                settings.brightness = Math.max(70, Math.round(13000 / avgBright));
+            }
+
+            if (stdDev < 55) {
+                settings.contrast = Math.min(170, Math.round(65 / Math.max(stdDev, 20) * 100));
+            }
+
+            return settings;
+        }
+
         function preprocessImage(file) {
             return new Promise(function(resolve, reject) {
                 if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
@@ -816,14 +873,10 @@
                     return;
                 }
 
+                var autoMode = document.getElementById('optAuto').checked;
                 var grayscale = document.getElementById('optGrayscale').checked;
                 var brightness = parseInt(document.getElementById('optBrightness').value);
                 var contrast = parseInt(document.getElementById('optContrast').value);
-
-                if (!grayscale && brightness === 100 && contrast === 100) {
-                    resolve(file);
-                    return;
-                }
 
                 var img = new Image();
                 img.onload = function() {
@@ -842,23 +895,37 @@
                     canvas.height = h;
                     var ctx = canvas.getContext('2d');
 
+                    ctx.drawImage(img, 0, 0, w, h);
+
+                    if (autoMode) {
+                        var auto = analyzeImage(ctx, w, h);
+                        if (auto.grayscale) grayscale = true;
+                        if (auto.brightness !== 100) brightness = auto.brightness;
+                        if (auto.contrast !== 100) contrast = auto.contrast;
+                        var parts = [];
+                        if (auto.grayscale) parts.push('grayscale');
+                        if (auto.brightness !== 100) parts.push('brightness ' + auto.brightness + '%');
+                        if (auto.contrast !== 100) parts.push('contrast ' + auto.contrast + '%');
+                        document.getElementById('loadingText').textContent =
+                            (parts.length ? 'Auto: ' + parts.join(', ') + ' &mdash; ' : '') +
+                            'Extracting text...';
+                    } else {
+                        if (!grayscale && brightness === 100 && contrast === 100) {
+                            resolve(file);
+                            return;
+                        }
+                    }
+
                     var filters = [];
                     if (grayscale) filters.push('grayscale(100%)');
                     if (brightness !== 100) filters.push('brightness(' + (brightness / 100) + ')');
                     if (contrast !== 100) filters.push('contrast(' + (contrast / 100) + ')');
 
-                    if (filters.length > 0) {
-                        ctx.filter = filters.join(' ');
-                    }
-
+                    ctx.filter = filters.join(' ');
                     ctx.drawImage(img, 0, 0, w, h);
+
                     canvas.toBlob(function(blob) {
-                        if (blob) {
-                            var processedFile = new File([blob], file.name, { type: 'image/png' });
-                            resolve(processedFile);
-                        } else {
-                            resolve(file);
-                        }
+                        resolve(blob ? new File([blob], file.name, { type: 'image/png' }) : file);
                     }, 'image/png');
                 };
                 img.onerror = function() { resolve(file); };
@@ -929,7 +996,9 @@
                         recognizeOptions.rotateAuto = true;
                     }
 
-                    loadingText.textContent = 'Extracting text...';
+                    if (!document.getElementById('optAuto').checked) {
+                        loadingText.textContent = 'Extracting text...';
+                    }
 
                     var result = await worker.recognize(processedFile, {}, recognizeOptions);
 
