@@ -89,6 +89,7 @@
         .post .badge { background: var(--bg-badge); color: var(--text-badge); padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-right: 6px; }
 
         .footer { text-align: center; margin-top: 30px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s; }
+        .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:var(--bg-container);padding:14px 24px;box-shadow:0 -4px 20px var(--shadow);z-index:9999;display:none;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border-top:2px solid var(--border-section);transition:background 0.3s,border-color 0.3s}.cookie-banner.visible{display:flex}.cookie-banner p{color:var(--text-secondary);font-size:0.82rem;flex:1;min-width:200px;margin:0}.cookie-banner a{color:#667eea}.cookie-banner .btn-row{display:flex;gap:6px;flex-shrink:0}.cookie-banner button{padding:8px 18px;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600}.cookie-banner .btn-accept{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}.cookie-banner .btn-reject{background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-section)}
 
         @media (max-width: 600px) {
             body { padding: 10px; }
@@ -118,7 +119,15 @@
             <p>A detailed comparison of the best free OCR tools available online. We compare accuracy, privacy, format support, and ease of use so you can choose the right tool.</p>
         </div>
 
-        <div class="footer">v1.5 &middot; <a href="../" style="color:inherit;">img2txt</a></div>
+        <div class="footer">v1.6 &middot; <a href="../privacy/" style="color:inherit;">Privacy</a> &middot; <a href="../terms/" style="color:inherit;">Terms</a> &middot; <a href="../" style="color:inherit;">img2txt</a></div>
+    </div>
+
+    <div class="cookie-banner" id="cookieBanner">
+        <p>This site uses cookies for analytics and personalized ads. <a href="../privacy/">Privacy Policy</a></p>
+        <div class="btn-row">
+            <button class="btn-reject" id="cookieReject">Reject All</button>
+            <button class="btn-accept" id="cookieAccept">Accept All</button>
+        </div>
     </div>
 
     <script>
@@ -131,6 +140,22 @@
             localStorage.setItem('ocr_theme', next);
             this.textContent = next === 'dark' ? '☀️' : '🌙';
         });
+
+        // ---- Cookie Consent Banner ----
+        (function() {
+            var banner = document.getElementById('cookieBanner');
+            if (!localStorage.getItem('cookie_consent')) {
+                banner.classList.add('visible');
+            }
+            document.getElementById('cookieAccept').addEventListener('click', function() {
+                localStorage.setItem('cookie_consent', 'accepted');
+                banner.classList.remove('visible');
+            });
+            document.getElementById('cookieReject').addEventListener('click', function() {
+                localStorage.setItem('cookie_consent', 'rejected');
+                banner.classList.remove('visible');
+            });
+        })();
     </script>
 </body>
 </html>

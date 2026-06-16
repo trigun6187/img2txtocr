@@ -103,6 +103,7 @@
         .no { color: var(--cross); }
         .verdict { background: var(--table-alt); padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #667eea; }
         .footer { text-align: center; margin-top: 40px; font-size: 0.75rem; color: var(--text-muted); }
+        .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:var(--bg-container);padding:14px 24px;box-shadow:0 -4px 20px var(--shadow);z-index:9999;display:none;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border-top:2px solid var(--border-section);transition:background 0.3s,border-color 0.3s}.cookie-banner.visible{display:flex}.cookie-banner p{color:var(--text-secondary);font-size:0.82rem;flex:1;min-width:200px;margin:0}.cookie-banner a{color:#667eea}.cookie-banner .btn-row{display:flex;gap:6px;flex-shrink:0}.cookie-banner button{padding:8px 18px;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600}.cookie-banner .btn-accept{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}.cookie-banner .btn-reject{background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-section)}
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 20px; }
@@ -276,7 +277,15 @@
             <strong>Try img2txt:</strong> <a href="../" style="color:#667eea;">Start extracting text from images now</a> &mdash; no sign-up, no uploads, completely free.
         </div>
 
-        <div class="footer">&copy; 2026 <a href="../" style="color:inherit;">img2txt</a> &middot; <a href="." style="color:inherit;">Blog</a></div>
+        <div class="footer"><a href="../privacy/" style="color:inherit;">Privacy</a> &middot; <a href="../terms/" style="color:inherit;">Terms</a> &middot; <a href="../" style="color:inherit;">img2txt</a> &middot; <a href="." style="color:inherit;">Blog</a></div>
+    </div>
+
+    <div class="cookie-banner" id="cookieBanner">
+        <p>This site uses cookies for analytics and personalized ads. <a href="../privacy/">Privacy Policy</a></p>
+        <div class="btn-row">
+            <button class="btn-reject" id="cookieReject">Reject All</button>
+            <button class="btn-accept" id="cookieAccept">Accept All</button>
+        </div>
     </div>
 
     <script>
@@ -289,6 +298,22 @@
             localStorage.setItem('ocr_theme', next);
             this.textContent = next === 'dark' ? '☀️' : '🌙';
         });
+
+        // ---- Cookie Consent Banner ----
+        (function() {
+            var banner = document.getElementById('cookieBanner');
+            if (!localStorage.getItem('cookie_consent')) {
+                banner.classList.add('visible');
+            }
+            document.getElementById('cookieAccept').addEventListener('click', function() {
+                localStorage.setItem('cookie_consent', 'accepted');
+                banner.classList.remove('visible');
+            });
+            document.getElementById('cookieReject').addEventListener('click', function() {
+                localStorage.setItem('cookie_consent', 'rejected');
+                banner.classList.remove('visible');
+            });
+        })();
     </script>
 </body>
 </html>
