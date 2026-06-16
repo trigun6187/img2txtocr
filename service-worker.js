@@ -1,4 +1,4 @@
-const CACHE = 'ocr-tool-v2';
+const CACHE = 'ocr-tool-v3';
 const URLS = [
   '/img2txtocr/',
   '/img2txtocr/index.html',
@@ -28,9 +28,21 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request).then(function(cached) {
-      return cached || fetch(event.request);
-    })
-  );
+  if (event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request).then(function(response) {
+        var clone = response.clone();
+        caches.open(CACHE).then(function(cache) { cache.put(event.request, clone); });
+        return response;
+      }).catch(function() {
+        return caches.match(event.request);
+      })
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request).then(function(cached) {
+        return cached || fetch(event.request);
+      })
+    );
+  }
 });
