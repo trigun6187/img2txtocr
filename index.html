@@ -208,14 +208,16 @@
            ============================================= */
         .header-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: flex-start;
             gap: 16px;
             margin-bottom: 8px;
+            position: relative;
         }
 
         .header-left {
             flex: 1;
+            text-align: center;
         }
 
         h1 {
@@ -263,7 +265,9 @@
             color: var(--text-primary);
             backdrop-filter: blur(var(--blur-glass));
             -webkit-backdrop-filter: blur(var(--blur-glass));
-            position: relative;
+            position: absolute;
+            right: 0;
+            top: 0;
             overflow: hidden;
         }
 
