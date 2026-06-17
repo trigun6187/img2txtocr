@@ -212,7 +212,6 @@
             align-items: flex-start;
             gap: 16px;
             margin-bottom: 8px;
-            position: relative;
         }
 
         .header-left {
@@ -247,7 +246,7 @@
             transition: color var(--transition-slow);
         }
 
-        /* Theme toggle */
+        /* Theme toggle — fixed to top-right viewport corner */
         #themeToggle {
             background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
@@ -264,10 +263,12 @@
             color: var(--text-primary);
             backdrop-filter: blur(var(--blur-glass));
             -webkit-backdrop-filter: blur(var(--blur-glass));
-            position: absolute;
-            right: 0;
-            top: 0;
+            position: fixed;
+            right: 24px;
+            top: 24px;
+            z-index: 1000;
             overflow: hidden;
+            box-shadow: var(--shadow-md);
         }
 
         #themeToggle:hover {
@@ -278,6 +279,17 @@
 
         #themeToggle:active {
             transform: scale(0.95);
+        }
+
+        /* Mobile: reduce size and margins so the toggle doesn't overlap content */
+        @media (max-width: 640px) {
+            #themeToggle {
+                width: 38px;
+                height: 38px;
+                right: 12px;
+                top: 12px;
+                font-size: 1rem;
+            }
         }
 
         /* =============================================
@@ -1317,15 +1329,17 @@
 </head>
 <body>
 
+    <!-- Theme toggle — fixed position, placed at body level -->
+    <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+        <span class="theme-icon">☀️</span>
+    </button>
+
     <div class="container">
         <!-- HEADER -->
         <div class="header-row">
             <div class="header-left">
                 <h1>Image to Text Converter</h1>
             </div>
-            <button id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
-                <span class="theme-icon">☀️</span>
-            </button>
         </div>
         <p class="subtitle">Convert images and PDFs to editable text instantly — No signup, no API keys, 100% free</p>
 
