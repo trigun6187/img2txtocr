@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://trigun6187.github.io/img2txtocr/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>https://freetextocr.com/</loc>
+    <lastmod>2025-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://freetextocr.com/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://freetextocr.com/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://freetextocr.com/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://freetextocr.com/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://freetextocr.com/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://freetextocr.com/?lang=ru"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://freetextocr.com/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://freetextocr.com/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://freetextocr.com/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://freetextocr.com/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://freetextocr.com/"/>
   </url>
   <url>
-    <loc>https://trigun6187.github.io/img2txtocr/blog/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>https://freetextocr.com/privacy/</loc>
+    <lastmod>2025-06-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://freetextocr.com/terms/</loc>
+    <lastmod>2025-06-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://freetextocr.com/blog/</loc>
+    <lastmod>2025-06-17</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://trigun6187.github.io/img2txtocr/blog/ocr-tutorials.html</loc>
-    <lastmod>2026-06-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://trigun6187.github.io/img2txtocr/blog/free-ocr-tools.html</loc>
-    <lastmod>2026-06-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://trigun6187.github.io/img2txtocr/privacy/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>https://freetextocr.com/blog/ocr-tutorials.html</loc>
+    <lastmod>2025-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://trigun6187.github.io/img2txtocr/terms/</loc>
-    <lastmod>2026-06-15</lastmod>
+    <loc>https://freetextocr.com/blog/free-ocr-tools.html</loc>
+    <lastmod>2025-06-17</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
 </urlset>

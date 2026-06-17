@@ -1,161 +1,379 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCR Blog - Image to Text Guides, Tips & Free Tools | img2txt</title>
-    <meta name="description" content="Learn how to extract text from images and PDFs with our free OCR tool. Tutorials, tips, and comparisons of the best free online OCR tools.">
+    <title>Free Text OCR Blog — OCR Tips, Tutorials &amp; Guides</title>
+    <meta name="description" content="Learn how to extract text from images, compare free OCR tools, and master optical character recognition. Tips, tutorials, and guides from Free Text OCR.">
+    <meta name="keywords" content="OCR blog, OCR tips, OCR tutorials, image to text guide, free OCR tools comparison, optical character recognition blog">
     <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#667eea">
+    <meta name="theme-color" content="#0a0a0b" id="themeColor">
+    <meta name="author" content="Free Text OCR">
+    <meta name="last-modified" content="2025-06-17">
 
-    <meta property="og:title" content="OCR Blog - Image to Text Guides, Tips & Free Tools">
-    <meta property="og:description" content="Learn how to extract text from images and PDFs with our free OCR tool. Tutorials, tips, and comparisons.">
-    <meta property="og:url" content="https://trigun6187.github.io/img2txtocr/blog/">
+    <!-- Open Graph -->
+    <meta property="og:title" content="Free Text OCR Blog — OCR Tips, Tutorials &amp; Guides">
+    <meta property="og:description" content="Learn how to extract text from images, compare free OCR tools, and master optical character recognition. Tips, tutorials, and guides from Free Text OCR.">
+    <meta property="og:url" content="https://freetextocr.com/blog/">
+    <meta property="og:image" content="https://freetextocr.com/icon.svg">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Image to Text Converter">
+    <meta property="og:site_name" content="Free Text OCR">
     <meta property="og:locale" content="en_US">
 
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="OCR Blog - Image to Text Guides, Tips & Free Tools">
-    <meta name="twitter:description" content="Learn how to extract text from images and PDFs with our free OCR tool.">
+    <meta name="twitter:title" content="Free Text OCR Blog — OCR Tips, Tutorials &amp; Guides">
+    <meta name="twitter:description" content="Learn OCR tips, tutorials, and tool comparisons from Free Text OCR.">
+    <meta name="twitter:image" content="https://freetextocr.com/icon.svg">
 
-    <link rel="canonical" href="https://trigun6187.github.io/img2txtocr/blog/">
+    <!-- Canonical & hreflang -->
+    <link rel="canonical" href="https://freetextocr.com/blog/">
+    <link rel="alternate" hreflang="en" href="https://freetextocr.com/blog/">
+    <link rel="alternate" hreflang="es" href="https://freetextocr.com/blog/?lang=es">
+    <link rel="alternate" hreflang="de" href="https://freetextocr.com/blog/?lang=de">
+    <link rel="alternate" hreflang="fr" href="https://freetextocr.com/blog/?lang=fr">
+    <link rel="alternate" hreflang="pt" href="https://freetextocr.com/blog/?lang=pt">
+    <link rel="alternate" hreflang="ru" href="https://freetextocr.com/blog/?lang=ru">
+    <link rel="alternate" hreflang="ar" href="https://freetextocr.com/blog/?lang=ar">
+    <link rel="alternate" hreflang="zh" href="https://freetextocr.com/blog/?lang=zh">
+    <link rel="alternate" hreflang="ja" href="https://freetextocr.com/blog/?lang=ja">
+    <link rel="alternate" hreflang="ko" href="https://freetextocr.com/blog/?lang=ko">
+    <link rel="alternate" hreflang="x-default" href="https://freetextocr.com/blog/">
+
     <link rel="icon" href="../icon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "Free Text OCR Blog",
+      "url": "https://freetextocr.com/blog/",
+      "description": "OCR tips, tutorials, and guides from Free Text OCR. Learn how to extract text from images and compare free OCR tools.",
+      "blogPost": [
+        {
+          "@type": "BlogPosting",
+          "headline": "How to Extract Text from Images — Complete OCR Tutorial (2025)",
+          "url": "https://freetextocr.com/blog/ocr-tutorials.html",
+          "datePublished": "2025-06-17",
+          "dateModified": "2025-06-17",
+          "author": { "@type": "Organization", "name": "Free Text OCR" }
+        },
+        {
+          "@type": "BlogPosting",
+          "headline": "Best Free OCR Tools in 2025 — Honest Comparison & Review",
+          "url": "https://freetextocr.com/blog/free-ocr-tools.html",
+          "datePublished": "2025-06-17",
+          "dateModified": "2025-06-17",
+          "author": { "@type": "Organization", "name": "Free Text OCR" }
+        }
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Free Text OCR",
+        "url": "https://freetextocr.com/"
+      }
+    }
+    </script>
 
     <style>
+        /* =============================================
+           DESIGN TOKENS — Glassmorphism System
+           ============================================= */
         :root {
-            --bg-body: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --bg-container: #ffffff;
-            --text-primary: #333333;
-            --text-secondary: #666666;
-            --text-muted: #999999;
-            --bg-input: #f5f5f5;
-            --border-section: #e0e0e0;
-            --bg-badge: #e8f4fd;
-            --text-badge: #1967d2;
-            --shadow: rgba(0,0,0,0.3);
+            --bg-root: #0a0a0b;
+            --bg-surface: rgba(255, 255, 255, 0.03);
+            --bg-surface-hover: rgba(255, 255, 255, 0.05);
+            --bg-elevated: rgba(255, 255, 255, 0.06);
+            --bg-glass: rgba(18, 18, 20, 0.7);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-default: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(255, 255, 255, 0.18);
+            --border-accent: rgba(99, 102, 241, 0.4);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --text-inverse: #0a0a0b;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --accent-soft: rgba(99, 102, 241, 0.15);
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.15);
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-pill: 9999px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+            --blur-glass: 20px;
+            --blur-heavy: 40px;
         }
-        [data-theme="dark"] {
-            --bg-body: #0f0c29;
-            --bg-container: #1a1a2e;
-            --text-primary: #e0e0e0;
-            --text-secondary: #aaaaaa;
-            --text-muted: #777777;
-            --bg-input: #2a2a4a;
-            --border-section: #2a2a4a;
-            --bg-badge: #1a237e;
-            --text-badge: #90caf9;
-            --shadow: rgba(0,0,0,0.5);
+
+        [data-theme="light"] {
+            --bg-root: #f8f9fb;
+            --bg-surface: rgba(255, 255, 255, 0.8);
+            --bg-surface-hover: rgba(255, 255, 255, 0.95);
+            --bg-elevated: rgba(255, 255, 255, 0.9);
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --border-subtle: rgba(0, 0, 0, 0.04);
+            --border-default: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(0, 0, 0, 0.14);
+            --border-accent: rgba(99, 102, 241, 0.3);
+            --text-primary: #18181b;
+            --text-secondary: #52525b;
+            --text-tertiary: #a1a1aa;
+            --text-inverse: #fafafa;
+            --accent: #4f46e5;
+            --accent-hover: #6366f1;
+            --accent-soft: rgba(99, 102, 241, 0.1);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
+            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.08);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-body);
+            font-family: var(--font-sans);
+            background: var(--bg-root);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 20px;
-            transition: background 0.3s;
+            line-height: 1.6;
+            letter-spacing: -0.011em;
+            transition: background var(--transition-slow), color var(--transition-slow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% -20%, rgba(99, 102, 241, 0.08), transparent),
+                radial-gradient(ellipse 60% 50% at 80% 80%, rgba(139, 92, 246, 0.05), transparent),
+                radial-gradient(ellipse 50% 40% at 20% 50%, rgba(167, 139, 250, 0.04), transparent);
+            pointer-events: none;
+        }
+
         .container {
-            max-width: 860px;
+            width: 100%;
+            max-width: 800px;
             margin: 0 auto;
-            background: var(--bg-container);
-            border-radius: 16px;
-            box-shadow: 0 20px 60px var(--shadow);
-            padding: 40px;
-            transition: background 0.3s;
+            padding: 48px 24px 32px;
+            animation: fadeInUp 500ms ease-out;
         }
-        .header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 10px; }
-        h1 { text-align: center; color: var(--text-primary); font-size: 2rem; transition: color 0.3s; }
-        .header-row h1 { margin-bottom: 0; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .header-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .header-left { text-align: center; }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.15;
+            color: var(--text-primary);
+            transition: color var(--transition-slow);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 32px;
+            letter-spacing: -0.008em;
+            transition: color var(--transition-slow);
+        }
+
         #themeToggle {
-            background: none; border: 2px solid var(--border-section); border-radius: 50%;
-            width: 42px; height: 42px; font-size: 1.3rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-            transition: background 0.2s; color: var(--text-primary);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-pill);
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--transition-base);
+            color: var(--text-primary);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            position: fixed;
+            right: 24px;
+            top: 24px;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
         }
-        #themeToggle:hover { background: var(--bg-input); }
-        .subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 30px; font-size: 1.05rem; transition: color 0.3s; }
-        .tool-link { text-align: center; margin-bottom: 30px; }
-        .tool-link a { color: #667eea; font-weight: 600; text-decoration: none; }
-        .tool-link a:hover { text-decoration: underline; }
 
-        .post { border: 1px solid var(--border-section); border-radius: 12px; padding: 24px; margin-bottom: 20px; transition: background 0.2s, border-color 0.3s; }
-        .post:hover { border-color: #667eea; }
-        .post h2 { font-size: 1.3rem; color: var(--text-primary); margin-bottom: 8px; }
-        .post h2 a { color: inherit; text-decoration: none; }
-        .post h2 a:hover { color: #667eea; }
-        .post .meta { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; }
-        .post p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
-        .post .badge { background: var(--bg-badge); color: var(--text-badge); padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-right: 6px; }
-
-        .footer { text-align: center; margin-top: 30px; font-size: 0.75rem; color: var(--text-muted); transition: color 0.3s; }
-        .cookie-banner{position:fixed;bottom:0;left:0;right:0;background:var(--bg-container);padding:14px 24px;box-shadow:0 -4px 20px var(--shadow);z-index:9999;display:none;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border-top:2px solid var(--border-section);transition:background 0.3s,border-color 0.3s}.cookie-banner.visible{display:flex}.cookie-banner p{color:var(--text-secondary);font-size:0.82rem;flex:1;min-width:200px;margin:0}.cookie-banner a{color:#667eea}.cookie-banner .btn-row{display:flex;gap:6px;flex-shrink:0}.cookie-banner button{padding:8px 18px;border:none;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600}.cookie-banner .btn-accept{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}.cookie-banner .btn-reject{background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-section)}
-
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .container { padding: 20px; }
-            h1 { font-size: 1.5rem; }
+        #themeToggle:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--border-hover);
+            transform: scale(1.05);
         }
+
+        #themeToggle:active { transform: scale(0.95); }
+
+        @media (max-width: 640px) {
+            .container { padding: 32px 16px 24px; }
+            h1 { font-size: 1.65rem; }
+            #themeToggle { width: 38px; height: 38px; right: 12px; top: 12px; font-size: 1rem; }
+        }
+
+        /* Blog cards */
+        .blog-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .blog-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            text-decoration: none;
+            color: inherit;
+            transition: all var(--transition-base);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            display: block;
+        }
+
+        .blog-card:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .blog-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.014em;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            transition: color var(--transition-slow);
+        }
+
+        .blog-card .meta {
+            font-size: 0.78rem;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+            font-family: var(--font-mono);
+        }
+
+        .blog-card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        .blog-card .read-more {
+            display: inline-block;
+            margin-top: 14px;
+            color: var(--accent-hover);
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 24px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            transition: color var(--transition-slow);
+            letter-spacing: -0.004em;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+            font-weight: 500;
+        }
+
+        .footer-link:hover { color: var(--accent-hover); }
     </style>
 </head>
 <body>
+    <button id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+
     <div class="container">
         <div class="header-row">
-            <h1>OCR Blog</h1>
-            <button id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+            <div class="header-left">
+                <h1>Free Text OCR Blog</h1>
+            </div>
         </div>
-        <p class="subtitle">Guides, tips, and comparisons for extracting text from images and PDFs</p>
-        <div class="tool-link"><a href="../">&larr; Back to OCR Tool</a></div>
+        <p class="subtitle">OCR tips, tutorials, and honest tool comparisons — all from the team behind Free Text OCR.</p>
 
-        <div class="post">
-            <div class="meta"><span class="badge">Tutorial</span> June 15, 2026</div>
-            <h2><a href="ocr-tutorials.html">How to Extract Text from Images: Complete OCR Guide</a></h2>
-            <p>Five comprehensive guides: extract text from screenshots, convert PDF images to editable text, use OCR on mobile, compare Tesseract.js vs commercial APIs, and best practices for image-to-text conversion.</p>
+        <div class="blog-grid">
+            <a href="ocr-tutorials.html" class="blog-card">
+                <h2>How to Extract Text from Images — Complete OCR Tutorial (2025)</h2>
+                <div class="meta">June 17, 2025 · 10 min read</div>
+                <p>Learn everything you need to know about extracting text from images and PDFs. Step-by-step guide covering image formats, language settings, accuracy tips, mobile OCR, and more. Perfect for beginners and power users alike.</p>
+                <span class="read-more">Read Tutorial →</span>
+            </a>
+
+            <a href="free-ocr-tools.html" class="blog-card">
+                <h2>Best Free OCR Tools in 2025 — Honest Comparison &amp; Review</h2>
+                <div class="meta">June 17, 2025 · 9 min read</div>
+                <p>We tested the top free OCR tools head-to-head. Compare Free Text OCR vs onlineocr.net vs i2ocr.com vs imagetotext.io on privacy, speed, accuracy, languages, ads, and ease of use. See which one truly deserves your trust.</p>
+                <span class="read-more">Read Comparison →</span>
+            </a>
         </div>
 
-        <div class="post">
-            <div class="meta"><span class="badge">Comparison</span> June 15, 2026</div>
-            <h2><a href="free-ocr-tools.html">Best Free Online OCR Tools: Features, Privacy &amp; Accuracy Compared</a></h2>
-            <p>A detailed comparison of the best free OCR tools available online. We compare accuracy, privacy, format support, and ease of use so you can choose the right tool.</p>
-        </div>
-
-        <div class="footer">v1.6 &middot; <a href="../privacy/" style="color:inherit;">Privacy</a> &middot; <a href="../terms/" style="color:inherit;">Terms</a> &middot; <a href="../" style="color:inherit;">img2txt</a></div>
-    </div>
-
-    <div class="cookie-banner" id="cookieBanner">
-        <p>This site uses cookies for analytics and personalized ads. <a href="../privacy/">Privacy Policy</a></p>
-        <div class="btn-row">
-            <button class="btn-reject" id="cookieReject">Reject All</button>
-            <button class="btn-accept" id="cookieAccept">Accept All</button>
+        <div class="footer">
+            <a href="https://freetextocr.com/" class="footer-link">Free Text OCR</a> · <a href="https://freetextocr.com/privacy/" class="footer-link">Privacy Policy</a> · <a href="https://freetextocr.com/terms/" class="footer-link">Terms of Service</a>
         </div>
     </div>
 
     <script>
-        var savedTheme = localStorage.getItem('ocr_theme') || 'light';
+        var savedTheme = localStorage.getItem('ocr_theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
-        document.getElementById('themeToggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-        document.getElementById('themeToggle').addEventListener('click', function() {
+        var toggle = document.getElementById('themeToggle');
+        toggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        toggle.addEventListener('click', function() {
             var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('ocr_theme', next);
             this.textContent = next === 'dark' ? '☀️' : '🌙';
         });
-
-        // ---- Cookie Consent Banner ----
-        (function() {
-            var banner = document.getElementById('cookieBanner');
-            if (!localStorage.getItem('cookie_consent')) {
-                banner.classList.add('visible');
-            }
-            document.getElementById('cookieAccept').addEventListener('click', function() {
-                localStorage.setItem('cookie_consent', 'accepted');
-                banner.classList.remove('visible');
-            });
-            document.getElementById('cookieReject').addEventListener('click', function() {
-                localStorage.setItem('cookie_consent', 'rejected');
-                banner.classList.remove('visible');
-            });
-        })();
     </script>
 </body>
 </html>
